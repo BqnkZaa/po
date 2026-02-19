@@ -39,7 +39,7 @@ import { OrderSummaryModal } from "@/components/OrderSummaryModal";
 const itemSchema = z.object({
     productId: z.string().optional(),
     productName: z.string().optional(),
-    quantity: z.coerce.number().min(0), // Allow 0, will filter out later
+    quantity: z.coerce.number().int().min(0), // Allow 0, will filter out later
     unitPrice: z.coerce.number().min(0),
     unit: z.string().optional(),
 });
@@ -82,6 +82,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
     const [isReviewOpen, setIsReviewOpen] = useState(false);
+    const [reviewData, setReviewData] = useState<PoFormValues | null>(null);
 
     // ── Form Setup ──
     const form = useForm<PoFormValues>({
@@ -343,6 +344,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
             return;
         }
 
+        setReviewData(data);
         setIsReviewOpen(true);
     };
 
@@ -554,7 +556,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                             <div className="relative">
                                                 <Input
                                                     type="number"
-                                                    step="0.00000001"
+                                                    step="1"
                                                     {...form.register(`standardItems.${index}.quantity`)}
                                                     className="text-center h-10 border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all font-medium"
                                                     placeholder="0"
@@ -621,7 +623,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                             />
                                         </div>
                                         <div className="col-span-4 md:col-span-2">
-                                            <Input type="number" step="0.00000001" {...form.register(`manualItems.${index}.quantity`)} className="text-center h-10 border-orange-200 focus:border-orange-400 focus:ring-orange-200 bg-white" />
+                                            <Input type="number" min="0" step="1" {...form.register(`manualItems.${index}.quantity`)} className="text-center h-10 border-orange-200 focus:border-orange-400 focus:ring-orange-200 bg-white" />
                                         </div>
                                         <div className="col-span-4 md:col-span-2">
                                             <Input type="number" step="0.00000001" {...form.register(`manualItems.${index}.unitPrice`)} className="text-right pr-8 h-10 border-orange-200 focus:border-orange-400 focus:ring-orange-200 bg-white font-mono" />
@@ -683,7 +685,13 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                                 />
                                             </div>
                                             <div className="col-span-4 md:col-span-2">
-                                                <Input type="number" step="0.00000001" {...form.register(`otherItems.${index}.quantity`)} className="text-center h-10 border-purple-200 focus:border-purple-400 focus:ring-purple-200 bg-white" />
+                                                <Input
+                                                    type="number"
+                                                    min="0"
+                                                    step="1"
+                                                    {...form.register(`otherItems.${index}.quantity`)}
+                                                    className="text-center h-10 border-purple-200 focus:border-purple-400 focus:ring-purple-200 bg-white"
+                                                />
                                             </div>
                                             <div className="col-span-4 md:col-span-2">
                                                 <Input type="number" step="0.00000001" {...form.register(`otherItems.${index}.unitPrice`)} className="text-right pr-8 h-10 border-purple-200 focus:border-purple-400 focus:ring-purple-200 bg-white font-mono" />
@@ -777,7 +785,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                 isOpen={isReviewOpen}
                 onClose={() => setIsReviewOpen(false)}
                 onConfirm={handleFinalSubmit}
-                data={form.getValues()}
+                data={reviewData || form.getValues()}
                 getSupplierName={getSupplierName}
                 grandTotal={grandTotal}
                 subtotal={subtotal}
