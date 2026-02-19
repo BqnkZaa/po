@@ -1,0 +1,59 @@
+# Implementation Plan: Purchase Order System Overhaul
+
+## Goal Description
+Redesign the Purchase Order system to match the provided UI screenshots and System Architect's requirements. This involves a full-stack update starting with the Database schema, followed by the Backend API, and finally the Frontend UI.
+
+## User Review Required
+> [!IMPORTANT]
+> - **Database Changes**: Adding `shippingCost` and `itemType`. Requires migration.
+> - **Terminology**: "Supplier" will be maintained in the code/DB, but the UI might refer to "Customer" if that's what the screenshot implies, BUT the prompt explicitly says "Ensure the entity we are buying from remains labeled and coded as Supplier, not Customer". I will stick to "Supplier" in code and UI unless "Customer" is purely a label for a specific field in the screenshot (which seems to be the case: "เลือกลูกค้า" -> "Select Customer"). *Clarification: The screenshot says "เลือกลูกค้า" (Select Customer), but the user said "Ensure the entity we are buying from remains labeled and coded as Supplier". I will use "Supplier" in code, but I might need to use the label "Customer" in the UI if that's what the screenshot demands, explaining it as a "Client" context, or just stick to "Supplier" to avoid confusion if the user insists. Given the screenshot matches the user's "Customer Info" tab, it likely implies we are issuing POs *for* a customer? Or is it a PO *to* a supplier? The user said "Purchase Order is issued to a Supplier". I will treat the "Customer" dropdown in the screenshot as "Supplier" in the backend.*
+
+## Proposed Changes
+
+### Step 1: Database Schema Update (Prisma)
+#### [MODIFY] [prisma/schema.prisma](file:///d:/Workshop/po/prisma/schema.prisma)
+- **PurchaseOrder Model**:
+    - Add `shippingCost Float @default(0)`
+- **PoItem Model**:
+    - Add `itemType ItemType @default(STANDARD)`
+    - Create Enum `ItemType { STANDARD, MANUAL, OTHER }`
+
+### Step 2: Backend API Update
+#### [MODIFY] [app/api/purchase-orders/route.ts](file:///d:/Workshop/po/src/app/api/purchase-orders/route.ts)
+- **POST Method**:
+    - Update Zod schema (`createPoSchema`, `poItemSchema`) to accept `shippingCost` and `itemType`.
+    - Update logic to save these fields.
+    - Update Grand Total Calculation: [(Subtotal - Discount) + VAT + Shipping](file:///d:/Workshop/po/src/app/api/purchase-orders/route.ts#25-62).
+- **GET Method**:
+    - Ensure new fields are returned (Prisma `include` should handle this automatically if they are on the model).
+
+### Step 3: UI Overhaul (Frontend)
+#### [MODIFY] [globals.css](file:///d:/Workshop/po/src/app/globals.css)
+- Add theme colors.
+
+#### [NEW] [components/Header.tsx](file:///d:/Workshop/po/src/components/Header.tsx)
+- Company Header.
+
+#### [NEW] [components/NavTabs.tsx](file:///d:/Workshop/po/src/components/NavTabs.tsx)
+- Navigation Tabs.
+
+#### [MODIFY] [app/purchase-orders/create/page.tsx](file:///d:/Workshop/po/src/app/purchase-orders/create/page.tsx)
+- **State**: Update `useForm` default values.
+- **Layout**: New Header, NavTabs, Form Container.
+- **Sections**:
+    - **General**: PO Number, Dates, Supplier (Labelled as Customer in UI if needed, but linking to Supplier ID).
+    - **Items**: Split into Standard (Blue), Manual (Orange), Other (Purple).
+        - *Standard*: Select product, fixed price.
+        - *Manual*: Select product (or text?), manual price input.
+        - *Other*: Free text or product? (Assume Product for now based on `productId` requirement, or allow ad-hoc if `productId` is optional? *Schema says Product is required*. So Manual Price Items are just Products with overrideable price).
+    - **Footer**: Shipping input, Totals.
+
+## Verification Plan
+### Automated Tests
+- `npx prisma migrate dev` to verify schema validity.
+- Test API Validation with Postman or Curl (optional).
+
+### Manual Verification
+- Create a PO with Standard and Manual items + Shipping.
+- Check Database to see `itemType` and `shippingCost` saved correctly.
+- Verify UI Totals match Server Totals.

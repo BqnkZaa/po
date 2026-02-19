@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  PURCHASER
+}
+
+enum PoStatus {
+  DRAFT
+  APPROVED
+  SENT
+  CANCELLED
+}
+
+enum ItemType {
+  STANDARD
+  MANUAL
+  OTHER
+}
+
+model User {
+  id             String          @id @default(cuid())
+  name           String
+  email          String          @unique
+  role           Role            @default(PURCHASER)
+  createdAt      DateTime        @default(now()) @map("created_at")
+  purchaseOrders PurchaseOrder[]
+
+  @@map("users")
+}
+
+model Supplier {
+  id             String          @id @default(cuid())
+  companyName    String          @map("company_name")
+  taxId          String?         @map("tax_id")
+  address        String?
+  contactPerson  String?         @map("contact_person")
+  phone          String?
+  email          String?
+  regularPrice   Decimal         @default(0) @map("regular_price") @db.Decimal(19, 8)
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  purchaseOrders PurchaseOrder[]
+
+  @@map("suppliers")
+}
+
+model Product {
+  id           String   @id @default(cuid())
+  sku          String   @unique
+  name         String
+  description  String?
+  defaultPrice Decimal  @map("default_price") @db.Decimal(19, 8)
+  unit         String
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  poItems      PoItem[]
+
+  @@map("products")
+}
+
+model PurchaseOrder {
+  id             String   @id @default(cuid())
+  poNumber       String   @unique @map("po_number")
+  userId         String   @map("user_id")
+  supplierId     String   @map("supplier_id")
+  issueDate      DateTime @map("issue_date")
+  deliveryDate   DateTime @map("delivery_date")
+  subtotal       Decimal  @db.Decimal(19, 8)
+  discountAmount Decimal  @default(0) @map("discount_amount") @db.Decimal(19, 8)
+  vatAmount      Decimal  @map("vat_amount") @db.Decimal(19, 8)
+  grandTotal     Decimal  @map("grand_total") @db.Decimal(19, 8)
+  shippingCost   Decimal  @default(0) @map("shipping_cost") @db.Decimal(19, 8)
+  status         PoStatus @default(DRAFT)
+  notes          String?
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  user     User     @relation(fields: [userId], references: [id])
+  supplier Supplier @relation(fields: [supplierId], references: [id])
+  items    PoItem[]
+
+  @@map("purchase_orders")
+}
+
+model PoItem {
+  id         String  @id @default(cuid())
+  poId       String  @map("po_id")
+  productId  String? @map("product_id") // Make optional to support MANUAL/OTHER types if they don't have a product ID
+  itemName   String? @map("item_name") // For ad-hoc items or snapshot of product name
+  itemType   ItemType @default(STANDARD) @map("item_type")
+  quantity   Decimal @db.Decimal(19, 8)
+  unitPrice  Decimal @map("unit_price") @db.Decimal(19, 8)
+  totalPrice Decimal @map("total_price") @db.Decimal(19, 8)
+
+  purchaseOrder PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
+  product       Product?      @relation(fields: [productId], references: [id])
+
+  @@map("po_items")
+}
