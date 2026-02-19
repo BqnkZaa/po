@@ -63,26 +63,24 @@ export default function PurchaseOrdersPage() {
         if (!poToCancel) return;
         try {
             const res = await fetch(`/api/purchase-orders/${poToCancel}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: "CANCELLED" }),
+                method: "DELETE",
             });
 
             if (!res.ok) {
                 const error = await res.json();
-                throw new Error(error.error || "Failed to cancel PO");
+                throw new Error(error.error || "Failed to delete PO");
             }
 
             toast({
                 title: "Success",
-                description: "Purchase order has been cancelled",
+                description: "Purchase order has been deleted successfully",
             });
             fetchPOs();
         } catch (error: any) {
             toast({
                 variant: "destructive",
                 title: "Error",
-                description: error.message || "Could not cancel purchase order",
+                description: error.message || "Could not delete purchase order",
             });
         } finally {
             setPoToCancel(null);
@@ -255,9 +253,8 @@ export default function PurchaseOrdersPage() {
                                         variant="default"
                                         className="w-full bg-red-600 hover:bg-red-700 text-white h-8 text-xs"
                                         onClick={() => setPoToCancel(po.id)}
-                                        disabled={po.status === "CANCELLED"}
                                     >
-                                        <Trash2 className="w-3 h-3 mr-1" /> ยกเลิก
+                                        <Trash2 className="w-3 h-3 mr-1" /> ลบ
                                     </Button>
                                 </div>
                             </div>
@@ -270,18 +267,18 @@ export default function PurchaseOrdersPage() {
                 <AlertDialogContent className="bg-white rounded-xl shadow-xl border-0 max-w-md">
                     <AlertDialogHeader className="flex flex-col items-center text-center space-y-4 pt-6">
                         <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-2">
-                            <AlertTriangle className="w-8 h-8 text-red-600" />
+                            <Trash2 className="w-8 h-8 text-red-600" />
                         </div>
                         <AlertDialogTitle className="text-xl font-bold text-gray-900">
-                            ยืนยันการยกเลิกรายการ?
+                            ยืนยันการลบรายการ?
                             <br />
-                            <span className="text-sm font-normal text-gray-500">(Confirm Cancel)</span>
+                            <span className="text-sm font-normal text-gray-500">(Confirm Delete)</span>
                         </AlertDialogTitle>
                         <AlertDialogDescription className="text-gray-600 text-base leading-relaxed max-w-sm mx-auto">
-                            การกระทำนี้ไม่สามารถย้อนกลับได้ สถานะของ PO จะถูกเปลี่ยนเป็น <span className="font-bold text-red-600">"ยกเลิก"</span>
+                            การกระทำนี้ไม่สามารถย้อนกลับได้ ข้อมูล PO จะถูก <span className="font-bold text-red-600">"ลบถาวร"</span>
                             <br />
                             <span className="text-xs text-gray-400 mt-1 block">
-                                (This action cannot be undone. The PO status will be changed to "CANCELLED".)
+                                (This action cannot be undone. The PO will be permanently deleted.)
                             </span>
                         </AlertDialogDescription>
                     </AlertDialogHeader>
@@ -293,7 +290,7 @@ export default function PurchaseOrdersPage() {
                             onClick={handleCancelPo}
                             className="flex-1 bg-red-600 hover:bg-red-700 text-white border-0 h-10 rounded-lg shadow-md hover:shadow-lg transition-all font-bold"
                         >
-                            ใช่, ยกเลิกเลย (Yes, Cancel)
+                            ตกลง, ลบเลย (Yes, Delete)
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

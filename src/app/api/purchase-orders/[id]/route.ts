@@ -111,12 +111,13 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
             return NextResponse.json({ error: "Purchase order not found" }, { status: 404 });
         }
 
-        if (po.status !== "DRAFT") {
-            return NextResponse.json(
-                { error: "Only DRAFT purchase orders can be deleted" },
-                { status: 422 }
-            );
-        }
+        // Allow deleting POs of any status as per user request
+        // if (po.status !== "DRAFT") {
+        //     return NextResponse.json(
+        //         { error: "Only DRAFT purchase orders can be deleted" },
+        //         { status: 422 }
+        //     );
+        // }
 
         // PoItems are cascade-deleted via schema onDelete: Cascade
         await db.purchaseOrder.delete({ where: { id } });
