@@ -335,7 +335,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                                     <Text style={styles.yellowSubHeaderTextReceipt}>ใบเสร็จ / Receipt</Text>
                                 ) : (
                                     <>
-                                        <Text style={styles.yellowSubHeaderText}>ใบกำกับภาษี/ใบส่งของ/ใบแจ้งหนี้</Text>
+                                        <Text style={styles.yellowSubHeaderText}>ใบกำกับภาษี/ใบส่งของ/ใบแจ้งหนี้ </Text>
                                         <Text style={styles.yellowSubHeaderText}>Tax Invoice/Delivery Order/Invoice</Text>
                                     </>
                                 )}
