@@ -24,6 +24,12 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 import Header from "@/components/Header";
 import NavTabs from "@/components/NavTabs";
 import { cn } from "@/lib/utils";
@@ -86,6 +92,8 @@ export default function PurchaseOrdersPage() {
             setPoToCancel(null);
         }
     };
+
+
 
     // Filters
     const [searchType, setSearchType] = useState("all");
@@ -205,7 +213,7 @@ export default function PurchaseOrdersPage() {
                                         <div className="font-bold">{po.poNumber}</div>
                                     </div>
                                     <div className="text-right">
-                                        <div className="text-xl font-bold">{Number(po.grandTotal).toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+                                        <div className="text-xl font-bold">{Number(po.grandTotal).toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}</div>
                                         <div className="text-xs opacity-75">บาท</div>
                                     </div>
                                 </div>
@@ -245,7 +253,10 @@ export default function PurchaseOrdersPage() {
                                         </Button>
                                     </Link>
                                     <Link href={`/purchase-orders/create?edit=${po.id}`} className="w-full">
-                                        <Button variant="default" className="w-full bg-[#f59e0b] hover:bg-[#d97706] text-white h-8 text-xs">
+                                        <Button
+                                            variant="default"
+                                            className="w-full bg-[#f59e0b] hover:bg-[#d97706] text-white h-8 text-xs"
+                                        >
                                             <Edit className="w-3 h-3 mr-1" /> แก้ไข
                                         </Button>
                                     </Link>
@@ -261,7 +272,7 @@ export default function PurchaseOrdersPage() {
                         ))
                     )}
                 </div>
-            </div>
+            </div >
 
             <AlertDialog open={!!poToCancel} onOpenChange={(open) => !open && setPoToCancel(null)}>
                 <AlertDialogContent className="bg-white rounded-xl shadow-xl border-0 max-w-md">
@@ -295,6 +306,8 @@ export default function PurchaseOrdersPage() {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </div>
+
+
+        </div >
     );
 }

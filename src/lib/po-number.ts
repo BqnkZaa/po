@@ -18,18 +18,10 @@ export async function generatePoNumber(
     const day = format(now, "dd");
     const datePart = `${thaiYear}${month}${day}`; // e.g. "25690219"
 
-    // Format: PO25690219-P001
-    const prefix = `PO${datePart}-P`;
+    // Format: Bill25690219-B001
+    const prefix = `Bill${datePart}-B`;
 
     // Find the latest PO number for the current date
-    // We use Prisma's findMany with orderBy because raw query might be tricky with cross-db compatibility 
-    // but the original code used raw query for locking. 
-    // Given the requirement is just "run number automatically", standard findFirst is usually enough unless high concurrency.
-    // I will stick to a simpler findFirst for now to avoid raw query syntax issues if schema changes, 
-    // but keep existing style if possible.
-    // Actually, looking at the previous code, it used `params` with raw query. 
-    // Let's use `findFirst` to be safer with types.
-
     const lastPo = await tx.purchaseOrder.findFirst({
         where: {
             poNumber: {
@@ -47,8 +39,8 @@ export async function generatePoNumber(
     let nextSequence = 1;
 
     if (lastPo) {
-        // Extract the sequence number (PO25690219-P001 -> 001)
-        const parts = lastPo.poNumber.split("-P");
+        // Extract the sequence number (Bill25690219-B001 -> 001)
+        const parts = lastPo.poNumber.split("-B");
         if (parts.length === 2) {
             const lastSequence = parseInt(parts[1], 10);
             if (!isNaN(lastSequence)) {

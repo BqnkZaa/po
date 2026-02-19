@@ -111,11 +111,11 @@ export function OrderSummaryModal({
                         </div>
                         <div className="flex justify-between items-center text-gray-600">
                             <span>ค่าขนส่ง:</span>
-                            <span>{Number(data.shippingCost || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })} บาท</span>
+                            <span>{Number(data.shippingCost || 0).toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })} บาท</span>
                         </div>
                         <div className="flex justify-between items-center pt-2 border-t border-gray-100">
                             <span className="text-[#2563EB] font-bold text-lg">รายรับสุทธิ:</span>
-                            <span className="text-[#2563EB] font-bold text-xl">{grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })} บาท</span>
+                            <span className="text-[#2563EB] font-bold text-xl">{grandTotal.toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })} บาท</span>
                         </div>
                         <div className="flex justify-between items-center pt-1">
                             <span className="text-gray-600 text-sm">จำนวนสินค้าที่สั่งซื้อ (ห่อ):</span>
