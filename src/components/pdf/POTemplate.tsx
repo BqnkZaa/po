@@ -448,7 +448,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                         {/* Row 4: Net Total */}
                         <View style={styles.netTotalRowNew}>
                             <Text style={{ ...styles.netTotalLabelCol, color: '#0099cc', fontWeight: 'bold' }}>รายรับสุทธิ</Text>
-                            <Text style={{ ...styles.netTotalTextCol, color: '#0099cc', fontWeight: 'bold' }}>{thaiText}ถ้วน </Text>
+                            <Text style={{ ...styles.netTotalTextCol, color: '#0099cc', fontWeight: 'bold' }}>{thaiText} </Text>
                             <Text style={{ ...styles.netTotalValueCol, color: '#0099cc', fontWeight: 'bold', fontSize: 12 }}>{grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท</Text>
                         </View>
                     </View>
