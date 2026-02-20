@@ -84,6 +84,10 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [reviewData, setReviewData] = useState<PoFormValues | null>(null);
 
+    // ── Constants ──
+    const ALLOWED_PRODUCT_NAMES = ["บะหมี่ลวกเส้น", "ข้าวซอยลวกเส้นสด", "หยกเส้นลวก"];
+    const restrictedProducts = products.filter(p => ALLOWED_PRODUCT_NAMES.includes(p.name));
+
     // ── Form Setup ──
     const form = useForm<PoFormValues>({
         resolver: zodResolver(poSchema) as any,
@@ -149,18 +153,53 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
     }, []);
 
     // ── Initialize Form with Initial Data ──
+    // ── Initialize Form with Initial Data or Defaults ──
     useEffect(() => {
-        if (initialData && products.length > 0 && suppliers.length > 0) {
-            // Map initial data to form structure
-            const standard = initialData.items.filter((i: any) => i.itemType === "STANDARD").map((i: any) => ({
-                productId: i.productId,
-                productName: i.product?.name || i.itemName,
-                quantity: i.quantity,
-                unitPrice: i.unitPrice,
-                unit: i.product?.unit || "",
-            }));
+        if (products.length > 0) {
+            const targetNames = ["บะหมี่ลวกเส้น", "ข้าวซอยลวกเส้นสด", "หยกเส้นลวก"];
 
-            const manual = initialData.items.filter((i: any) => i.itemType === "MANUAL").map((i: any) => ({
+            // Helper to get product info
+            const getProduct = (name: string) => products.find(p => p.name === name);
+
+            // Helper to create field structure
+            const createField = (name: string, type: "standard" | "manual", existingItems: any[]) => {
+                const prod = getProduct(name);
+                const existing = existingItems.find(i =>
+                    (i.productId && prod && i.productId === prod.id) ||
+                    (i.productName === name)
+                );
+
+                let unitPrice = 0;
+                if (existing) {
+                    unitPrice = existing.unitPrice;
+                } else if (prod) {
+                    if (type === "standard") {
+                        // Estimate price if not set? Or wait for calculation
+                        unitPrice = (Number(prod.defaultPrice) / 2) / 1.07;
+                    } else {
+                        unitPrice = Number(prod.defaultPrice);
+                    }
+                }
+
+                return {
+                    productId: prod?.id || "",
+                    productName: name, // Force name even if product not found?
+                    quantity: existing ? existing.quantity : 0,
+                    unitPrice: unitPrice,
+                    unit: prod?.unit || existing?.unit || "",
+                    // itemType, etc handled by submit
+                };
+            };
+
+            const initialItems = initialData?.items || [];
+            const stdItems = initialItems.filter((i: any) => i.itemType === "STANDARD");
+            const manItems = initialItems.filter((i: any) => i.itemType === "MANUAL");
+
+            const newStandard = targetNames.map(name => createField(name, "standard", stdItems));
+            const newManual = targetNames.map(name => createField(name, "manual", manItems));
+
+            // Other items: keep as is from initialData
+            const other = initialItems.filter((i: any) => i.itemType === "OTHER").map((i: any) => ({
                 productId: i.productId || "",
                 productName: i.product?.name || i.itemName,
                 quantity: i.quantity,
@@ -168,68 +207,28 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                 unit: i.product?.unit || "",
             }));
 
-            const other = initialData.items.filter((i: any) => i.itemType === "OTHER").map((i: any) => ({
-                productId: i.productId || "",
-                productName: i.product?.name || i.itemName,
-                quantity: i.quantity,
-                unitPrice: i.unitPrice,
-                unit: i.product?.unit || "",
-            }));
+            // Only reset if we need to? Or just do it once when products/initialData loaded
+            // We need to be careful not to overwrite user input if they are typing.
+            // This Effect runs on [initialData, products] which changes rarely (load time).
 
-            // Ensure at least one empty row if empty
-            if (standard.length === 0) standard.push({ productId: "", quantity: 0, unitPrice: 0, unit: "", productName: "" });
-            if (manual.length === 0) manual.push({ productId: "", quantity: 0, unitPrice: 0, unit: "", productName: "" });
+            // We should use reset() to set values.
+            const currentValues = form.getValues();
+
+            // Check if we already initialized to avoid resetting user work?
+            // But existing items logic handles preservation if we passed currentValues instead of initialItems...
+            // BUT this effect is properly for INITIAL LOADS.
 
             reset({
-                supplierId: initialData.supplierId,
-                issueDate: new Date(initialData.issueDate),
-                deliveryDate: new Date(initialData.deliveryDate),
-                standardItems: standard,
-                manualItems: manual,
+                supplierId: initialData?.supplierId || "",
+                issueDate: initialData ? new Date(initialData.issueDate) : new Date(),
+                deliveryDate: initialData ? new Date(initialData.deliveryDate) : new Date(),
+                standardItems: newStandard,
+                manualItems: newManual,
                 otherItems: other,
-                shippingCost: initialData.shippingCost,
+                shippingCost: initialData?.shippingCost || 0,
             });
-        } else if (!initialData && products.length > 0 && standardFields.length <= 1 && !form.getValues("standardItems")[0].productId) {
-            // Pre-fill logic for NEW PO (copied from original)
-            const targetSKUs = ["DEMO-NOODLE-001", "DEMO-KHAOSOI-001", "DEMO-JADE-001"];
-            const prefillProducts = targetSKUs.map(sku => products.find(p => p.sku === sku)).filter(Boolean) as Product[];
-
-            if (prefillProducts.length < 3) {
-                const targetNames = ["บะหมี่ลวกเส้น", "ข้าวซอยลวกเส้นสด", "หยกเส้นลวก"];
-                targetNames.forEach((name, idx) => {
-                    if (!prefillProducts[idx]) {
-                        const found = products.find(p => p.name === name);
-                        if (found) prefillProducts[idx] = found;
-                    }
-                });
-            }
-
-            if (prefillProducts.length > 0) {
-                const createItems = (type: "standard" | "manual") => prefillProducts.map(p => {
-                    let unitPrice = 0;
-                    if (type === "standard") {
-                        unitPrice = (Number(p.defaultPrice) / 2) / 1.07;
-                    } else {
-                        unitPrice = Number(p.defaultPrice);
-                    }
-                    return {
-                        productId: p.id,
-                        productName: p.name,
-                        quantity: 0,
-                        unitPrice: unitPrice || 0,
-                        unit: p.unit
-                    };
-                });
-
-                const currentValues = form.getValues();
-                reset({
-                    ...currentValues,
-                    standardItems: createItems("standard"),
-                    manualItems: createItems("manual"),
-                });
-            }
         }
-    }, [initialData, products, suppliers, reset]); // Removed standardFields from dep to avoid infinite loop if possible, but kept logic mostly same
+    }, [initialData, products, reset]); // Removed suppliers to avoid reset on supplier load alone? logic needs products mostly.
 
     // ── React to Supplier Change: Update Standard Item Prices ──
     // Note: Only update prices if user explicitly changes supplier, OR if it's a new form.
@@ -545,12 +544,11 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                 {standardFields.map((field, index) => (
                                     <div key={field.id} className="grid grid-cols-12 gap-y-3 gap-x-4 items-center p-3 hover:bg-blue-50/30 transition-colors group">
                                         <div className="col-span-12 md:col-span-5">
-                                            <ProductCombobox
-                                                products={products}
-                                                value={form.watch(`standardItems.${index}.productId`)}
-                                                onSelect={(val) => handleProductSelect("standard", index, val)}
-                                                placeholder="ค้าหาสินค้า..."
-                                            />
+                                            <div className="h-10 flex items-center px-3 bg-gray-50 border border-gray-200 rounded-md text-gray-700 font-medium select-none">
+                                                {form.watch(`standardItems.${index}.productName`)}
+                                                <input type="hidden" {...form.register(`standardItems.${index}.productId`)} />
+                                                <input type="hidden" {...form.register(`standardItems.${index}.productName`)} />
+                                            </div>
                                         </div>
                                         <div className="col-span-4 md:col-span-2">
                                             <div className="relative">
@@ -576,17 +574,13 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                             {(Number(form.watch(`standardItems.${index}.quantity`) || 0) * Number(form.watch(`standardItems.${index}.unitPrice`) || 0)).toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}
                                         </div>
                                         <div className="col-span-12 md:col-span-1 flex justify-center md:justify-end">
-                                            <Button type="button" variant="ghost" size="icon" className="text-gray-400 hover:text-red-500 hover:bg-red-50 h-8 w-8 rounded-full" onClick={() => removeStandard(index)}>
-                                                <Trash2 className="w-4 h-4" />
-                                            </Button>
+                                            {/* Fixed items, no delete button */}
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                            <div className="p-3 bg-gray-50 border-t border-gray-100">
-                                <Button type="button" variant="outline" size="sm" className="w-full text-blue-600 border-blue-200 hover:bg-blue-50 border-dashed" onClick={() => appendStandard({ productId: "", quantity: 0, unitPrice: 0 })}>
-                                    <Plus className="w-4 h-4 mr-2" /> เพิ่มรายการมาตรฐาน
-                                </Button>
+                            <div className="p-3 bg-gray-50 border-t border-gray-100 text-center text-xs text-gray-400 italic">
+                                * รายการมาตรฐานถูกกำหนดไว้คงที่ (Fixed Items)
                             </div>
                         </div>
                     </div>
@@ -615,12 +609,11 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                 {manualFields.map((field, index) => (
                                     <div key={field.id} className="grid grid-cols-12 gap-y-3 gap-x-4 items-center p-3 hover:bg-orange-100/30 transition-colors">
                                         <div className="col-span-12 md:col-span-5">
-                                            <ProductCombobox
-                                                products={products}
-                                                value={form.watch(`manualItems.${index}.productId`)}
-                                                onSelect={(val) => handleProductSelect("manual", index, val)}
-                                                placeholder="เลือกสินค้า..."
-                                            />
+                                            <div className="h-10 flex items-center px-3 bg-white border border-orange-200 rounded-md text-orange-800 font-medium select-none">
+                                                {form.watch(`manualItems.${index}.productName`)}
+                                                <input type="hidden" {...form.register(`manualItems.${index}.productId`)} />
+                                                <input type="hidden" {...form.register(`manualItems.${index}.productName`)} />
+                                            </div>
                                         </div>
                                         <div className="col-span-4 md:col-span-2">
                                             <Input type="number" min="0" step="1" {...form.register(`manualItems.${index}.quantity`)} className="text-center h-10 border-orange-200 focus:border-orange-400 focus:ring-orange-200 bg-white" />
@@ -632,17 +625,13 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                             {(Number(form.watch(`manualItems.${index}.quantity`) || 0) * Number(form.watch(`manualItems.${index}.unitPrice`) || 0)).toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}
                                         </div>
                                         <div className="col-span-12 md:col-span-1 flex justify-center md:justify-end">
-                                            <Button type="button" variant="ghost" size="icon" className="text-orange-300 hover:text-red-500 hover:bg-red-50" onClick={() => removeManual(index)}>
-                                                <Trash2 className="w-4 h-4" />
-                                            </Button>
+                                            {/* Fixed items */}
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                            <div className="p-3">
-                                <Button type="button" variant="ghost" size="sm" className="w-full text-orange-600 hover:bg-orange-100 hover:text-orange-700 bg-orange-100/50" onClick={() => appendManual({ productId: "", quantity: 0, unitPrice: 0 })}>
-                                    <Plus className="w-4 h-4 mr-2" /> เพิ่มรายการพิเศษ
-                                </Button>
+                            <div className="p-3 bg-orange-50/50 border-t border-orange-100 text-center text-xs text-orange-400 italic">
+                                * รายการพิเศษถูกกำหนดไว้คงที่ (Fixed Items)
                             </div>
                         </div>
                     </div>
@@ -677,11 +666,10 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                     {otherFields.map((field, index) => (
                                         <div key={field.id} className="grid grid-cols-12 gap-y-3 gap-x-4 items-center p-3 hover:bg-purple-100/30 transition-colors">
                                             <div className="col-span-12 md:col-span-5">
-                                                <ProductCombobox
-                                                    products={products}
-                                                    value={form.watch(`otherItems.${index}.productId`)}
-                                                    onSelect={(val) => handleProductSelect("other", index, val)}
-                                                    placeholder="เลือก/พิมพ์ชื่อสินค้า..."
+                                                <Input
+                                                    {...form.register(`otherItems.${index}.productName`)}
+                                                    className="h-10 border-purple-200 focus:border-purple-400 focus:ring-purple-200 bg-white"
+                                                    placeholder="ระบุชื่อสินค้า..."
                                                 />
                                             </div>
                                             <div className="col-span-4 md:col-span-2">
@@ -756,7 +744,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                             <div className="bg-gradient-to-r from-yellow-400 to-amber-500 rounded-lg p-4 text-blue-900 flex flex-col justify-between h-24 shadow-lg relative overflow-hidden group">
                                 <div className="absolute -right-4 -top-4 bg-white/30 rounded-full w-20 h-20 blur-xl group-hover:scale-150 transition-transform duration-500"></div>
                                 <div className="text-xs font-extrabold uppercase tracking-wider z-10">ยอดสุทธิ (Net Total)</div>
-                                <div className="font-bold text-3xl font-mono tracking-tight z-10">{grandTotal.toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}</div>
+                                <div className="font-bold text-3xl font-mono tracking-tight z-10">{grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                             </div>
                         </div>
                     </div>

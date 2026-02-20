@@ -29,9 +29,7 @@ const supplierSchema = z.object({
     companyName: z.string().min(1, "กรุณาระบุชื่อลูกค้า"),
     taxId: z.string().optional(),
     address: z.string().optional(),
-    contactPerson: z.string().optional(),
     phone: z.string().optional(),
-    email: z.string().email("รูปแบบอีเมลไม่ถูกต้อง").optional().or(z.literal("")),
     regularPrice: z.coerce.number().min(0),
 });
 
@@ -54,9 +52,7 @@ export function CustomerModal({ isOpen, onClose, onSuccess, supplierToEdit }: Cu
             companyName: "",
             taxId: "",
             address: "",
-            contactPerson: "",
             phone: "",
-            email: "",
             regularPrice: 0,
         } as SupplierFormValues,
     });
@@ -68,9 +64,7 @@ export function CustomerModal({ isOpen, onClose, onSuccess, supplierToEdit }: Cu
                     companyName: supplierToEdit.companyName || "",
                     taxId: supplierToEdit.taxId || "",
                     address: supplierToEdit.address || "",
-                    contactPerson: supplierToEdit.contactPerson || "",
                     phone: supplierToEdit.phone || "",
-                    email: supplierToEdit.email || "",
                     regularPrice: supplierToEdit.regularPrice || 0,
                 });
             } else {
@@ -78,9 +72,7 @@ export function CustomerModal({ isOpen, onClose, onSuccess, supplierToEdit }: Cu
                     companyName: "",
                     taxId: "",
                     address: "",
-                    contactPerson: "",
                     phone: "",
-                    email: "",
                     regularPrice: 0,
                 });
             }
@@ -197,19 +189,6 @@ export function CustomerModal({ isOpen, onClose, onSuccess, supplierToEdit }: Cu
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <FormField
                                         control={form.control}
-                                        name="contactPerson"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>ชื่อผู้ติดต่อ</FormLabel>
-                                                <FormControl>
-                                                    <Input {...field} className="border-gray-300" placeholder="ระบุชื่อผู้ติดต่อ" />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
                                         name="phone"
                                         render={({ field }) => (
                                             <FormItem>
@@ -218,22 +197,6 @@ export function CustomerModal({ isOpen, onClose, onSuccess, supplierToEdit }: Cu
                                                     <div className="relative">
                                                         <Phone className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
                                                         <Input {...field} className="pl-9 border-gray-300" placeholder="08x-xxx-xxxx" />
-                                                    </div>
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="email"
-                                        render={({ field }) => (
-                                            <FormItem className="col-span-2 md:col-span-1">
-                                                <FormLabel>อีเมล</FormLabel>
-                                                <FormControl>
-                                                    <div className="relative">
-                                                        <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-                                                        <Input {...field} className="pl-9 border-gray-300" placeholder="example@mail.com" />
                                                     </div>
                                                 </FormControl>
                                                 <FormMessage />

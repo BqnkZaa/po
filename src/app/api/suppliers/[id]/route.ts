@@ -6,9 +6,7 @@ const supplierUpdateSchema = z.object({
     companyName: z.string().min(1).optional(),
     taxId: z.string().optional(),
     address: z.string().optional(),
-    contactPerson: z.string().optional(),
     phone: z.string().optional(),
-    email: z.string().email().optional().or(z.literal("")),
     regularPrice: z.coerce.number().min(0).optional(),
 });
 
@@ -52,7 +50,6 @@ export async function PATCH(request: NextRequest, { params }: Params) {
             where: { id },
             data: {
                 ...validated.data,
-                email: validated.data.email || null,
                 regularPrice: validated.data.regularPrice,
             },
         });
