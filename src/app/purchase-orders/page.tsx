@@ -100,6 +100,27 @@ export default function PurchaseOrdersPage() {
     const [filterDate, setFilterDate] = useState<Date | undefined>();
     const [filterPo, setFilterPo] = useState("");
     const [filterCustomer, setFilterCustomer] = useState("");
+    const [filterMonth, setFilterMonth] = useState("all");
+    const [filterYear, setFilterYear] = useState("all");
+
+    // Generate year options dynamically (last 5 years + current)
+    const currentYear = new Date().getFullYear();
+    const yearOptions = Array.from({ length: 6 }, (_, i) => String(currentYear - i));
+
+    const monthOptions = [
+        { value: "1", label: "มกราคม (Jan)" },
+        { value: "2", label: "กุมภาพันธ์ (Feb)" },
+        { value: "3", label: "มีนาคม (Mar)" },
+        { value: "4", label: "เมษายน (Apr)" },
+        { value: "5", label: "พฤษภาคม (May)" },
+        { value: "6", label: "มิถุนายน (Jun)" },
+        { value: "7", label: "กรกฎาคม (Jul)" },
+        { value: "8", label: "สิงหาคม (Aug)" },
+        { value: "9", label: "กันยายน (Sep)" },
+        { value: "10", label: "ตุลาคม (Oct)" },
+        { value: "11", label: "พฤศจิกายน (Nov)" },
+        { value: "12", label: "ธันวาคม (Dec)" },
+    ];
 
     const fetchPOs = async () => {
         try {
@@ -137,13 +158,21 @@ export default function PurchaseOrdersPage() {
             const dateStr = format(filterDate, "yyyy-MM-dd");
             result = result.filter(po => po.issueDate.startsWith(dateStr));
         }
+        if (filterYear !== "all") {
+            result = result.filter(po => new Date(po.issueDate).getFullYear() === Number(filterYear));
+        }
+        if (filterMonth !== "all") {
+            result = result.filter(po => (new Date(po.issueDate).getMonth() + 1) === Number(filterMonth));
+        }
         setFilteredPos(result);
-    }, [pos, filterPo, filterCustomer, filterDate]);
+    }, [pos, filterPo, filterCustomer, filterDate, filterMonth, filterYear]);
 
     const resetFilters = () => {
         setFilterPo("");
         setFilterCustomer("");
         setFilterDate(undefined);
+        setFilterMonth("all");
+        setFilterYear("all");
     };
 
     return (
@@ -166,6 +195,7 @@ export default function PurchaseOrdersPage() {
 
                 {/* ── Filters ── */}
                 <div className="bg-white p-4 rounded-lg sm:rounded-b-lg shadow-sm border border-gray-100 sm:border-t-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-3 sm:gap-4 items-end">
+                    {/* Row 1: existing filters */}
                     <div className="col-span-1 sm:col-span-2">
                         <label className="text-xs text-gray-500 mb-1 block">ค้นหาแบบ (Type)</label>
                         <Select value={searchType} onValueChange={setSearchType}>
@@ -193,6 +223,36 @@ export default function PurchaseOrdersPage() {
                         <Button className="w-full bg-gray-600 hover:bg-gray-700 text-white shadow-sm" onClick={resetFilters}>
                             <RefreshCw className="mr-2 h-4 w-4" /> รีเซ็ต
                         </Button>
+                    </div>
+
+                    {/* Row 2: Month / Year filters */}
+                    <div className="col-span-1 sm:col-span-2 md:col-span-6">
+                        <label className="text-xs text-gray-500 mb-1 block">กรองตามเดือน (Month)</label>
+                        <Select value={filterMonth} onValueChange={setFilterMonth}>
+                            <SelectTrigger className="bg-gray-50 border-gray-200">
+                                <SelectValue placeholder="ทุกเดือน" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">ทุกเดือน (All Months)</SelectItem>
+                                {monthOptions.map(m => (
+                                    <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="col-span-1 sm:col-span-2 md:col-span-6">
+                        <label className="text-xs text-gray-500 mb-1 block">กรองตามปี (Year)</label>
+                        <Select value={filterYear} onValueChange={setFilterYear}>
+                            <SelectTrigger className="bg-gray-50 border-gray-200">
+                                <SelectValue placeholder="ทุกปี" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">ทุกปี (All Years)</SelectItem>
+                                {yearOptions.map(y => (
+                                    <SelectItem key={y} value={y}>{y}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
                 </div>
 
