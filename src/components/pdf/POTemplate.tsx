@@ -273,8 +273,8 @@ const styles = StyleSheet.create({
     summaryLabelCol: {
         width: '70%',
         padding: 5,
-        borderRightWidth: 0.5,
-        borderRightColor: '#ccc',
+        // borderRightWidth: 0.5,
+        // borderRightColor: '#ccc',
     },
     summaryValueCol: {
         width: '30%',

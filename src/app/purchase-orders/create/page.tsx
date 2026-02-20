@@ -33,7 +33,7 @@ function CreatePurchaseOrderContent() {
     }
 
     return (
-        <div className="max-w-[1200px] mx-auto px-4 mt-6 space-y-6">
+        <div className="max-w-[1200px] mx-auto px-2 sm:px-4 mt-4 sm:mt-6 space-y-4 sm:space-y-6">
             {/* ── Create Order Form Header (Green) ── */}
             <div className="bg-[#10b981] text-white p-4 rounded-t-lg flex items-center gap-2 shadow-md">
                 <div className="bg-white/20 p-1.5 rounded-md">

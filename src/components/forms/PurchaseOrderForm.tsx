@@ -430,16 +430,16 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                 })} className="space-y-8">
 
                     {/* ── General Info Card ── */}
-                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-12 gap-6 items-end relative overflow-hidden">
+                    <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-4 sm:gap-6 items-end relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                        <div className="col-span-12 md:col-span-3">
+                        <div className="col-span-1 sm:col-span-2 md:col-span-3">
                             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5 block">เลข PO (Auto)</label>
                             <div className="flex items-center h-10 px-3 bg-blue-50 border border-blue-100 rounded-md text-blue-700 font-bold font-mono text-lg shadow-sm">
                                 {initialData ? initialData.poNumber : "AUTO-GEN"}
                             </div>
                         </div>
 
-                        <div className="col-span-12 md:col-span-3">
+                        <div className="col-span-1 md:col-span-3">
                             <FormField
                                 control={control}
                                 name="issueDate"
@@ -464,7 +464,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                             />
                         </div>
 
-                        <div className="col-span-12 md:col-span-3">
+                        <div className="col-span-1 md:col-span-3">
                             <FormField
                                 control={control}
                                 name="deliveryDate"
@@ -490,7 +490,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                             />
                         </div>
 
-                        <div className="col-span-12 md:col-span-3">
+                        <div className="col-span-1 sm:col-span-2 md:col-span-3">
                             <FormField
                                 control={control}
                                 name="supplierId"
@@ -532,49 +532,61 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
 
                         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                             {/* Table Header */}
-                            <div className="bg-gray-50/80 border-b border-gray-200 py-3 px-4 grid grid-cols-12 gap-4 text-xs font-bold text-gray-500 uppercase tracking-wider items-center">
-                                <div className="col-span-12 md:col-span-5 text-left pl-2">รายการสินค้า</div>
-                                <div className="col-span-4 md:col-span-2 text-center">จำนวน</div>
-                                <div className="col-span-4 md:col-span-2 text-right pr-4">ราคา/หน่วย</div>
-                                <div className="col-span-4 md:col-span-2 text-right pr-4">รวม (บาท)</div>
-                                <div className="col-span-12 md:col-span-1"></div>
+                            <div className="bg-gray-50/80 border-b border-gray-200 py-3 px-4 hidden md:grid grid-cols-12 gap-4 text-xs font-bold text-gray-500 uppercase tracking-wider items-center">
+                                <div className="col-span-5 text-left pl-2">รายการสินค้า</div>
+                                <div className="col-span-2 text-center">จำนวน</div>
+                                <div className="col-span-2 text-right pr-4">ราคา/หน่วย</div>
+                                <div className="col-span-2 text-right pr-4">รวม (บาท)</div>
+                                <div className="col-span-1"></div>
                             </div>
 
                             <div className="divide-y divide-gray-100">
                                 {standardFields.map((field, index) => (
-                                    <div key={field.id} className="grid grid-cols-12 gap-y-3 gap-x-4 items-center p-3 hover:bg-blue-50/30 transition-colors group">
-                                        <div className="col-span-12 md:col-span-5">
-                                            <div className="h-10 flex items-center px-3 bg-gray-50 border border-gray-200 rounded-md text-gray-700 font-medium select-none">
+                                    <div key={field.id} className="grid grid-cols-1 md:grid-cols-12 gap-y-3 gap-x-4 items-center p-3 sm:p-4 hover:bg-blue-50/30 transition-colors group relative">
+
+                                        {/* Mobile Label */}
+                                        <div className="md:hidden text-xs font-bold text-gray-400 uppercase mb-1">รายการสินค้า</div>
+                                        <div className="col-span-1 md:col-span-5">
+                                            <div className="h-10 flex items-center px-3 bg-gray-50 border border-gray-200 rounded-md text-gray-700 font-medium select-none text-sm sm:text-base truncate">
                                                 {form.watch(`standardItems.${index}.productName`)}
                                                 <input type="hidden" {...form.register(`standardItems.${index}.productId`)} />
                                                 <input type="hidden" {...form.register(`standardItems.${index}.productName`)} />
                                             </div>
                                         </div>
-                                        <div className="col-span-4 md:col-span-2">
-                                            <div className="relative">
-                                                <Input
-                                                    type="number"
-                                                    step="1"
-                                                    {...form.register(`standardItems.${index}.quantity`)}
-                                                    className="text-center h-10 border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all font-medium"
-                                                    placeholder="0"
-                                                />
-                                                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">
-                                                    {form.watch(`standardItems.${index}.unit`) || ""}
-                                                </span>
+
+                                        <div className="grid grid-cols-2 gap-4 md:contents">
+                                            <div className="col-span-1 md:col-span-2">
+                                                <div className="md:hidden text-xs font-bold text-gray-400 uppercase mb-1">จำนวน</div>
+                                                <div className="relative">
+                                                    <Input
+                                                        type="number"
+                                                        step="1"
+                                                        {...form.register(`standardItems.${index}.quantity`)}
+                                                        className="text-center h-10 border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all font-medium"
+                                                        placeholder="0"
+                                                    />
+                                                    <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">
+                                                        {form.watch(`standardItems.${index}.unit`) || ""}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div className="col-span-1 md:col-span-2 text-right">
+                                                <div className="md:hidden text-xs font-bold text-gray-400 uppercase mb-1">ราคา/หน่วย</div>
+                                                <div className="h-10 flex items-center justify-end pr-4 font-mono text-sm text-gray-600 bg-gray-50 rounded-md border border-transparent">
+                                                    {Number(form.watch(`standardItems.${index}.unitPrice`) || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                </div>
+                                                <input type="hidden" {...form.register(`standardItems.${index}.unitPrice`)} />
                                             </div>
                                         </div>
-                                        <div className="col-span-4 md:col-span-2">
-                                            <div className="h-10 flex items-center justify-end pr-4 font-mono text-sm text-gray-600 bg-gray-50 rounded-md border border-transparent">
-                                                {Number(form.watch(`standardItems.${index}.unitPrice`) || 0).toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}
+
+                                        <div className="col-span-1 md:col-span-2 text-right pt-2 md:pt-0 border-t md:border-t-0 border-dashed border-gray-100 mt-2 md:mt-0 flex justify-between md:block items-center">
+                                            <div className="md:hidden text-xs font-bold text-gray-500 uppercase">รวม</div>
+                                            <div className="pr-4 text-blue-600 font-bold font-mono text-sm sm:text-base">
+                                                {(Number(form.watch(`standardItems.${index}.quantity`) || 0) * Number(form.watch(`standardItems.${index}.unitPrice`) || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                             </div>
-                                            <input type="hidden" {...form.register(`standardItems.${index}.unitPrice`)} />
                                         </div>
-                                        <div className="col-span-4 md:col-span-2 text-right pr-4 text-blue-600 font-bold font-mono text-sm">
-                                            {(Number(form.watch(`standardItems.${index}.quantity`) || 0) * Number(form.watch(`standardItems.${index}.unitPrice`) || 0)).toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}
-                                        </div>
-                                        <div className="col-span-12 md:col-span-1 flex justify-center md:justify-end">
-                                            {/* Fixed items, no delete button */}
+                                        <div className="col-span-1 hidden md:flex justify-end">
                                         </div>
                                     </div>
                                 ))}
@@ -597,34 +609,46 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                             </div>
                         </div>
                         <div className="bg-orange-50/50 rounded-xl shadow-sm border border-orange-100 overflow-hidden">
-                            <div className="bg-orange-100/50 border-b border-orange-200 py-3 px-4 grid grid-cols-12 gap-4 text-xs font-bold text-orange-700 uppercase tracking-wider items-center">
-                                <div className="col-span-12 md:col-span-5 text-left pl-2">รายการสินค้า</div>
-                                <div className="col-span-4 md:col-span-2 text-center">จำนวน</div>
-                                <div className="col-span-4 md:col-span-2 text-right pr-4">ราคา/หน่วย</div>
-                                <div className="col-span-4 md:col-span-2 text-right pr-4">รวม (บาท)</div>
-                                <div className="col-span-12 md:col-span-1"></div>
+                            <div className="bg-orange-100/50 border-b border-orange-200 py-3 px-4 hidden md:grid grid-cols-12 gap-4 text-xs font-bold text-orange-700 uppercase tracking-wider items-center">
+                                <div className="col-span-5 text-left pl-2">รายการสินค้า</div>
+                                <div className="col-span-2 text-center">จำนวน</div>
+                                <div className="col-span-2 text-right pr-4">ราคา/หน่วย</div>
+                                <div className="col-span-2 text-right pr-4">รวม (บาท)</div>
+                                <div className="col-span-1"></div>
                             </div>
 
                             <div className="divide-y divide-orange-100">
                                 {manualFields.map((field, index) => (
-                                    <div key={field.id} className="grid grid-cols-12 gap-y-3 gap-x-4 items-center p-3 hover:bg-orange-100/30 transition-colors">
-                                        <div className="col-span-12 md:col-span-5">
-                                            <div className="h-10 flex items-center px-3 bg-white border border-orange-200 rounded-md text-orange-800 font-medium select-none">
+                                    <div key={field.id} className="grid grid-cols-1 md:grid-cols-12 gap-y-3 gap-x-4 items-center p-3 sm:p-4 hover:bg-orange-100/30 transition-colors">
+
+                                        {/* Mobile Label */}
+                                        <div className="md:hidden text-xs font-bold text-orange-400 uppercase mb-1">รายการสินค้า</div>
+                                        <div className="col-span-1 md:col-span-5">
+                                            <div className="h-10 flex items-center px-3 bg-white border border-orange-200 rounded-md text-orange-800 font-medium select-none text-sm sm:text-base truncate">
                                                 {form.watch(`manualItems.${index}.productName`)}
                                                 <input type="hidden" {...form.register(`manualItems.${index}.productId`)} />
                                                 <input type="hidden" {...form.register(`manualItems.${index}.productName`)} />
                                             </div>
                                         </div>
-                                        <div className="col-span-4 md:col-span-2">
-                                            <Input type="number" min="0" step="1" {...form.register(`manualItems.${index}.quantity`)} className="text-center h-10 border-orange-200 focus:border-orange-400 focus:ring-orange-200 bg-white" />
+
+                                        <div className="grid grid-cols-2 gap-4 md:contents">
+                                            <div className="col-span-1 md:col-span-2">
+                                                <div className="md:hidden text-xs font-bold text-orange-400 uppercase mb-1">จำนวน</div>
+                                                <Input type="number" min="0" step="1" {...form.register(`manualItems.${index}.quantity`)} className="text-center h-10 border-orange-200 focus:border-orange-400 focus:ring-orange-200 bg-white" />
+                                            </div>
+                                            <div className="col-span-1 md:col-span-2">
+                                                <div className="md:hidden text-xs font-bold text-orange-400 uppercase mb-1">ราคา/หน่วย</div>
+                                                <Input type="number" step="0.00000001" {...form.register(`manualItems.${index}.unitPrice`)} className="text-right pr-8 h-10 border-orange-200 focus:border-orange-400 focus:ring-orange-200 bg-white font-mono" />
+                                            </div>
                                         </div>
-                                        <div className="col-span-4 md:col-span-2">
-                                            <Input type="number" step="0.00000001" {...form.register(`manualItems.${index}.unitPrice`)} className="text-right pr-8 h-10 border-orange-200 focus:border-orange-400 focus:ring-orange-200 bg-white font-mono" />
+
+                                        <div className="col-span-1 md:col-span-2 text-right pt-2 md:pt-0 border-t md:border-t-0 border-dashed border-orange-200 mt-2 md:mt-0 flex justify-between md:block items-center">
+                                            <div className="md:hidden text-xs font-bold text-orange-400 uppercase">รวม</div>
+                                            <div className="pr-4 text-orange-600 font-bold font-mono text-sm sm:text-base">
+                                                {(Number(form.watch(`manualItems.${index}.quantity`) || 0) * Number(form.watch(`manualItems.${index}.unitPrice`) || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            </div>
                                         </div>
-                                        <div className="col-span-4 md:col-span-2 text-right pr-4 text-orange-600 font-bold font-mono text-sm">
-                                            {(Number(form.watch(`manualItems.${index}.quantity`) || 0) * Number(form.watch(`manualItems.${index}.unitPrice`) || 0)).toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}
-                                        </div>
-                                        <div className="col-span-12 md:col-span-1 flex justify-center md:justify-end">
+                                        <div className="hidden md:flex col-span-1 justify-end">
                                             {/* Fixed items */}
                                         </div>
                                     </div>
@@ -655,39 +679,50 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
 
                         {otherFields.length > 0 && (
                             <div className="bg-purple-50/50 rounded-xl shadow-sm border border-purple-100 overflow-hidden">
-                                <div className="bg-purple-100/50 border-b border-purple-200 py-3 px-4 grid grid-cols-12 gap-4 text-xs font-bold text-purple-700 uppercase tracking-wider items-center">
-                                    <div className="col-span-12 md:col-span-5 text-left pl-2">รายการสินค้า</div>
-                                    <div className="col-span-4 md:col-span-2 text-center">จำนวน</div>
-                                    <div className="col-span-4 md:col-span-2 text-right pr-4">ราคา/หน่วย</div>
-                                    <div className="col-span-4 md:col-span-2 text-right pr-4">รวม</div>
-                                    <div className="col-span-12 md:col-span-1"></div>
+                                <div className="bg-purple-100/50 border-b border-purple-200 py-3 px-4 hidden md:grid grid-cols-12 gap-4 text-xs font-bold text-purple-700 uppercase tracking-wider items-center">
+                                    <div className="col-span-5 text-left pl-2">รายการสินค้า</div>
+                                    <div className="col-span-2 text-center">จำนวน</div>
+                                    <div className="col-span-2 text-right pr-4">ราคา/หน่วย</div>
+                                    <div className="col-span-2 text-right pr-4">รวม</div>
+                                    <div className="col-span-1"></div>
                                 </div>
                                 <div className="divide-y divide-purple-100">
                                     {otherFields.map((field, index) => (
-                                        <div key={field.id} className="grid grid-cols-12 gap-y-3 gap-x-4 items-center p-3 hover:bg-purple-100/30 transition-colors">
-                                            <div className="col-span-12 md:col-span-5">
+                                        <div key={field.id} className="grid grid-cols-1 md:grid-cols-12 gap-y-3 gap-x-4 items-center p-3 sm:p-4 hover:bg-purple-100/30 transition-colors">
+
+                                            <div className="md:hidden text-xs font-bold text-purple-400 uppercase mb-1">ชื่อสินค้า</div>
+                                            <div className="col-span-1 md:col-span-5">
                                                 <Input
                                                     {...form.register(`otherItems.${index}.productName`)}
-                                                    className="h-10 border-purple-200 focus:border-purple-400 focus:ring-purple-200 bg-white"
+                                                    className="h-10 border-purple-200 focus:border-purple-400 focus:ring-purple-200 bg-white text-sm"
                                                     placeholder="ระบุชื่อสินค้า..."
                                                 />
                                             </div>
-                                            <div className="col-span-4 md:col-span-2">
-                                                <Input
-                                                    type="number"
-                                                    min="0"
-                                                    step="1"
-                                                    {...form.register(`otherItems.${index}.quantity`)}
-                                                    className="text-center h-10 border-purple-200 focus:border-purple-400 focus:ring-purple-200 bg-white"
-                                                />
+
+                                            <div className="grid grid-cols-2 gap-4 md:contents">
+                                                <div className="col-span-1 md:col-span-2">
+                                                    <div className="md:hidden text-xs font-bold text-purple-400 uppercase mb-1">จำนวน</div>
+                                                    <Input
+                                                        type="number"
+                                                        min="0"
+                                                        step="1"
+                                                        {...form.register(`otherItems.${index}.quantity`)}
+                                                        className="text-center h-10 border-purple-200 focus:border-purple-400 focus:ring-purple-200 bg-white"
+                                                    />
+                                                </div>
+                                                <div className="col-span-1 md:col-span-2">
+                                                    <div className="md:hidden text-xs font-bold text-purple-400 uppercase mb-1">ราคา/หน่วย</div>
+                                                    <Input type="number" step="0.00000001" {...form.register(`otherItems.${index}.unitPrice`)} className="text-right pr-8 h-10 border-purple-200 focus:border-purple-400 focus:ring-purple-200 bg-white font-mono" />
+                                                </div>
                                             </div>
-                                            <div className="col-span-4 md:col-span-2">
-                                                <Input type="number" step="0.00000001" {...form.register(`otherItems.${index}.unitPrice`)} className="text-right pr-8 h-10 border-purple-200 focus:border-purple-400 focus:ring-purple-200 bg-white font-mono" />
+
+                                            <div className="col-span-1 md:col-span-2 text-right pt-2 md:pt-0 border-t md:border-t-0 border-dashed border-purple-200 mt-2 md:mt-0 flex justify-between md:block items-center">
+                                                <div className="md:hidden text-xs font-bold text-purple-400 uppercase">รวม</div>
+                                                <div className="pr-4 text-purple-600 font-bold font-mono text-sm sm:text-base">
+                                                    {(Number(form.watch(`otherItems.${index}.quantity`) || 0) * Number(form.watch(`otherItems.${index}.unitPrice`) || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                </div>
                                             </div>
-                                            <div className="col-span-4 md:col-span-2 text-right pr-4 text-purple-600 font-bold font-mono text-sm">
-                                                {(Number(form.watch(`otherItems.${index}.quantity`) || 0) * Number(form.watch(`otherItems.${index}.unitPrice`) || 0)).toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}
-                                            </div>
-                                            <div className="col-span-12 md:col-span-1 flex justify-center md:justify-end">
+                                            <div className="col-span-1 md:col-span-1 flex justify-end">
                                                 <Button type="button" variant="ghost" size="icon" className="text-purple-300 hover:text-red-500 hover:bg-red-50" onClick={() => removeOther(index)}>
                                                     <Trash2 className="w-4 h-4" />
                                                 </Button>
@@ -717,8 +752,8 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                     </div>
 
                     {/* ── Footer Summary ── */}
-                    <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl text-white p-6 shadow-lg transform transition-all hover:scale-[1.005] duration-300">
-                        <div className="flex items-center gap-3 mb-6 border-b border-white/20 pb-4">
+                    <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl text-white p-4 sm:p-6 shadow-lg transform transition-all hover:scale-[1.005] duration-300">
+                        <div className="flex items-center gap-3 mb-4 sm:mb-6 border-b border-white/20 pb-4">
                             <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
                                 <FileText className="w-5 h-5 text-white" />
                             </div>
@@ -728,30 +763,30 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm border border-white/10 flex flex-col justify-between h-24">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                            <div className="bg-white/10 rounded-lg p-3 sm:p-4 backdrop-blur-sm border border-white/10 flex flex-col justify-between h-20 sm:h-24">
                                 <div className="text-xs text-blue-100 uppercase tracking-wider font-semibold">ยอดรวมสินค้า</div>
-                                <div className="font-bold text-2xl font-mono tracking-tight">{subtotal.toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}</div>
+                                <div className="font-bold text-xl sm:text-2xl font-mono tracking-tight">{subtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                             </div>
-                            <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm border border-white/10 flex flex-col justify-between h-24">
+                            <div className="bg-white/10 rounded-lg p-3 sm:p-4 backdrop-blur-sm border border-white/10 flex flex-col justify-between h-20 sm:h-24">
                                 <div className="text-xs text-blue-100 uppercase tracking-wider font-semibold">VAT (7%)</div>
-                                <div className="font-bold text-2xl font-mono tracking-tight">{vatAmount.toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}</div>
+                                <div className="font-bold text-xl sm:text-2xl font-mono tracking-tight">{vatAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                             </div>
-                            <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm border border-white/10 flex flex-col justify-between h-24">
+                            <div className="bg-white/10 rounded-lg p-3 sm:p-4 backdrop-blur-sm border border-white/10 flex flex-col justify-between h-20 sm:h-24">
                                 <div className="text-xs text-blue-100 uppercase tracking-wider font-semibold">จำนวนรวม (ชิ้น)</div>
-                                <div className="font-bold text-2xl font-mono tracking-tight">{totalQuantity.toLocaleString()}</div>
+                                <div className="font-bold text-xl sm:text-2xl font-mono tracking-tight">{totalQuantity.toLocaleString()}</div>
                             </div>
-                            <div className="bg-gradient-to-r from-yellow-400 to-amber-500 rounded-lg p-4 text-blue-900 flex flex-col justify-between h-24 shadow-lg relative overflow-hidden group">
+                            <div className="bg-gradient-to-r from-yellow-400 to-amber-500 rounded-lg p-3 sm:p-4 text-blue-900 flex flex-col justify-between h-20 sm:h-24 shadow-lg relative overflow-hidden group">
                                 <div className="absolute -right-4 -top-4 bg-white/30 rounded-full w-20 h-20 blur-xl group-hover:scale-150 transition-transform duration-500"></div>
                                 <div className="text-xs font-extrabold uppercase tracking-wider z-10">ยอดสุทธิ (Net Total)</div>
-                                <div className="font-bold text-3xl font-mono tracking-tight z-10">{grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                <div className="font-bold text-2xl sm:text-3xl font-mono tracking-tight z-10">{grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                             </div>
                         </div>
                     </div>
 
                     {/* ── Action Buttons ── */}
-                    <div className="grid grid-cols-2 gap-4 pt-2 sticky bottom-0 bg-white/95 backdrop-blur-sm p-4 -mx-4 md:mx-0 border-t border-gray-100 z-10 shadow-[0_-5px_15px_-5px_rgba(0,0,0,0.05)] rounded-b-lg">
-                        <div className="flex gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-2 sticky bottom-0 bg-white/95 backdrop-blur-sm p-4 -mx-4 md:mx-0 border-t border-gray-100 z-10 shadow-[0_-5px_15px_-5px_rgba(0,0,0,0.05)] rounded-b-lg">
+                        <div className="flex gap-2 order-2 sm:order-1">
                             {onCancel && (
                                 <Button type="button" variant="outline" className="flex-1 border-gray-300 text-gray-600 hover:bg-gray-50 font-bold" onClick={onCancel}>
                                     ยกเลิก
@@ -761,13 +796,13 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                 <RefreshCw className="mr-2 h-4 w-4" /> รีเซ็ต
                             </Button>
                         </div>
-                        <Button type="submit" className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold shadow-md shadow-emerald-200" disabled={isLoading}>
+                        <Button type="submit" className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold shadow-md shadow-emerald-200 order-1 sm:order-2 h-11" disabled={isLoading}>
                             {isLoading ? <Loader2 className="animate-spin" /> : <><CheckCircle className="mr-2 h-4 w-4" /> บันทึกคำสั่งซื้อ (Save Order) </>}
                         </Button>
                     </div>
 
-                </form>
-            </Form>
+                </form >
+            </Form >
 
             <OrderSummaryModal
                 isOpen={isReviewOpen}

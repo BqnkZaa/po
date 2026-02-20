@@ -109,17 +109,17 @@ export default function CustomersPage() {
             <Header />
             <NavTabs />
 
-            <div className="max-w-6xl mx-auto px-4 space-y-6">
+            <div className="max-w-6xl mx-auto px-4 space-y-4 sm:space-y-6">
 
                 {/* ── Header Bar (Blue) ── */}
-                <div className="bg-[#1a3dbf] text-white p-3 rounded-t-lg flex items-center justify-between shadow-md">
+                <div className="bg-[#1a3dbf] text-white p-3 sm:p-4 rounded-lg sm:rounded-t-lg flex flex-col sm:flex-row items-center justify-between shadow-md gap-3 sm:gap-0">
                     <div className="flex items-center gap-2">
                         <Users className="w-5 h-5" />
-                        <span className="font-bold">ข้อมูลลูกค้า (Customer Info)</span>
+                        <span className="font-bold text-base sm:text-lg">ข้อมูลลูกค้า (Customer Info)</span>
                     </div>
                     <Button
                         size="sm"
-                        className="bg-white text-[#1a3dbf] hover:bg-gray-100 border-none font-bold"
+                        className="bg-white text-[#1a3dbf] hover:bg-gray-100 border-none font-bold w-full sm:w-auto shadow-sm"
                         onClick={handleAddNew}
                     >
                         <Plus className="mr-2 h-4 w-4" /> เพิ่มลูกค้าใหม่
@@ -127,48 +127,61 @@ export default function CustomersPage() {
                 </div>
 
                 {/* ── Customer List ── */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {isLoading ? <div>Loading...</div> : suppliers.map(s => (
-                        <div key={s.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    {isLoading ? (
+                        <div className="col-span-1 md:col-span-2 text-center py-10">
+                            <div className="flex justify-center items-center gap-2">
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                                <span className="text-gray-500">กำลังโหลด...</span>
+                            </div>
+                        </div>
+                    ) : suppliers.length === 0 ? (
+                        <div className="col-span-1 md:col-span-2 text-center py-10 text-gray-400">
+                            ไม่พบข้อมูลลูกค้า
+                        </div>
+                    ) : suppliers.map(s => (
+                        <div key={s.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 sm:p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
                             <div>
-                                <div className="flex justify-between items-start mb-4">
-                                    <h3 className="text-lg font-bold text-gray-800">{s.companyName}</h3>
+                                <div className="flex flex-wrap justify-between items-start mb-4 gap-2">
+                                    <h3 className="text-base sm:text-lg font-bold text-gray-800 break-words max-w-full">{s.companyName}</h3>
                                     {s.contactPerson && (
-                                        <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full">
+                                        <span className="text-[10px] bg-gray-100 text-gray-500 px-2 py-1 rounded-full whitespace-nowrap">
                                             {s.contactPerson}
                                         </span>
                                     )}
                                 </div>
-                                <div className="space-y-2 text-sm text-gray-600">
-                                    <div className="flex justify-between border-b border-gray-50 pb-2">
-                                        <span className="text-gray-400">ที่อยู่</span>
-                                        <span className="text-right max-w-[60%] line-clamp-2">{s.address || "-"}</span>
+                                <div className="space-y-3 text-xs sm:text-sm text-gray-600">
+                                    <div className="flex justify-between items-start border-b border-gray-50 pb-2">
+                                        <span className="text-gray-400 font-medium shrink-0">ที่อยู่</span>
+                                        <span className="text-right max-w-[65%] line-clamp-2 text-gray-700">{s.address || "-"}</span>
                                     </div>
-                                    <div className="flex justify-between border-b border-gray-50 pb-2">
-                                        <span className="text-gray-400">เบอร์โทรศัพท์</span>
-                                        <span>{s.phone || "-"}</span>
+                                    <div className="flex justify-between items-center border-b border-gray-50 pb-2">
+                                        <span className="text-gray-400 font-medium">เบอร์โทรศัพท์</span>
+                                        <span className="font-mono">{s.phone || "-"}</span>
                                     </div>
-                                    <div className="flex justify-between border-b border-gray-50 pb-2">
-                                        <span className="text-gray-400">เลขผู้เสียภาษี</span>
-                                        <span>{s.taxId || "-"}</span>
+                                    <div className="flex justify-between items-center border-b border-gray-50 pb-2">
+                                        <span className="text-gray-400 font-medium">เลขผู้เสียภาษี</span>
+                                        <span className="font-mono">{s.taxId || "-"}</span>
                                     </div>
-                                    <div className="flex justify-between border-b border-gray-50 pb-2 bg-blue-50 p-2 rounded">
-                                        <span className="text-gray-700 font-semibold">ราคาขายประจำ</span>
-                                        <span className="font-bold text-blue-600">
-                                            {s.regularPrice ? Number(s.regularPrice).toFixed(2) : "0.00"} บาท
+                                    <div className="flex justify-between items-center bg-blue-50/50 p-2 rounded-lg border border-blue-100/50">
+                                        <span className="text-blue-800 font-semibold text-xs uppercase tracking-wide">ราคาขายประจำ</span>
+                                        <span className="font-bold text-blue-600 font-mono text-base">
+                                            {s.regularPrice ? Number(s.regularPrice).toLocaleString(undefined, { minimumFractionDigits: 2 }) : "0.00"}
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-4 mt-6">
+                            <div className="grid grid-cols-2 gap-3 mt-5">
                                 <Button
-                                    className="bg-[#f59e0b] hover:bg-[#d97706] text-white"
+                                    variant="outline"
+                                    className="border-amber-200 text-amber-700 hover:bg-amber-50"
                                     onClick={() => handleEdit(s)}
                                 >
                                     <Edit className="mr-2 h-4 w-4" /> แก้ไข
                                 </Button>
                                 <Button
-                                    className="bg-red-500 hover:bg-red-600 text-white"
+                                    variant="outline"
+                                    className="border-red-200 text-red-600 hover:bg-red-50"
                                     onClick={() => confirmDelete(s.id)}
                                 >
                                     <Trash2 className="mr-2 h-4 w-4" /> ลบ

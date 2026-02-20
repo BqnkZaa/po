@@ -16,7 +16,7 @@ export default function NavTabs() {
     ];
 
     return (
-        <div className="flex justify-center space-x-4 my-4">
+        <div className="flex justify-start sm:justify-center overflow-x-auto space-x-2 sm:space-x-4 my-2 sm:my-4 px-4 pb-2 no-scrollbar">
             {tabs.map((tab) => {
                 const isActive = pathname === tab.href;
                 return (
@@ -24,13 +24,13 @@ export default function NavTabs() {
                         key={tab.href}
                         href={tab.href}
                         className={cn(
-                            "flex items-center space-x-2 px-6 py-2 rounded-lg font-medium transition-colors shadow-sm",
+                            "flex items-center space-x-2 px-3 sm:px-6 py-2 rounded-lg font-medium transition-colors shadow-sm whitespace-nowrap text-sm sm:text-base flex-shrink-0",
                             isActive
                                 ? "bg-[#1a3dbf] text-white"
                                 : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
                         )}
                     >
-                        <tab.icon size={18} />
+                        <tab.icon size={16} className="sm:w-[18px] sm:h-[18px]" />
                         <span>{tab.name}</span>
                     </Link>
                 );

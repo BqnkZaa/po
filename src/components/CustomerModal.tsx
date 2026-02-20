@@ -113,34 +113,34 @@ export function CustomerModal({ isOpen, onClose, onSuccess, supplierToEdit }: Cu
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[650px] p-0 overflow-hidden bg-white">
-                <DialogHeader className="px-6 py-4 bg-gray-50 border-b border-gray-100 flex flex-row items-center justify-between">
-                    <DialogTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                        {isEditing ? <div className="p-2 bg-amber-100 rounded-full text-amber-600"><Building2 size={20} /></div> : <div className="p-2 bg-blue-100 rounded-full text-blue-600"><Users size={20} /></div>}
+            <DialogContent className="w-[95vw] sm:max-w-[650px] p-0 overflow-hidden bg-white max-h-[90vh] flex flex-col">
+                <DialogHeader className="px-4 sm:px-6 py-4 bg-gray-50 border-b border-gray-100 shrink-0 flex flex-row items-center justify-between">
+                    <DialogTitle className="text-lg sm:text-xl font-bold text-gray-800 flex items-center gap-2">
+                        {isEditing ? <div className="p-2 bg-amber-100 rounded-full text-amber-600"><Building2 size={18} className="sm:w-5 sm:h-5" /></div> : <div className="p-2 bg-blue-100 rounded-full text-blue-600"><Users size={18} className="sm:w-5 sm:h-5" /></div>}
                         {isEditing ? "แก้ไขข้อมูลลูกค้า" : "เพิ่มลูกค้าใหม่"}
                     </DialogTitle>
                 </DialogHeader>
 
-                <div className="px-6 py-4 max-h-[80vh] overflow-y-auto">
+                <div className="px-4 sm:px-6 py-4 overflow-y-auto flex-1">
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
 
                             {/* Company Info Section */}
-                            <div className="space-y-4">
-                                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                            <div className="space-y-3 sm:space-y-4">
+                                <h3 className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2 sm:mb-3 flex items-center gap-2">
                                     <Building2 className="w-4 h-4" /> ข้อมูลทั่วไป
                                 </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                                     <FormField
                                         control={form.control}
                                         name="companyName"
                                         render={({ field }) => (
-                                            <FormItem className="col-span-2">
-                                                <FormLabel>ชื่อบริษัท / ลูกค้า <span className="text-red-500">*</span></FormLabel>
+                                            <FormItem className="col-span-1 md:col-span-2">
+                                                <FormLabel className="text-xs sm:text-sm">ชื่อบริษัท / ลูกค้า <span className="text-red-500">*</span></FormLabel>
                                                 <FormControl>
-                                                    <Input {...field} className="h-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500" placeholder="ระบุชื่อลูกค้า..." />
+                                                    <Input {...field} className="h-9 sm:h-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-sm" placeholder="ระบุชื่อลูกค้า..." />
                                                 </FormControl>
-                                                <FormMessage />
+                                                <FormMessage className="text-xs" />
                                             </FormItem>
                                         )}
                                     />
@@ -149,14 +149,14 @@ export function CustomerModal({ isOpen, onClose, onSuccess, supplierToEdit }: Cu
                                         name="taxId"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>เลขผู้เสียภาษี</FormLabel>
+                                                <FormLabel className="text-xs sm:text-sm">เลขผู้เสียภาษี</FormLabel>
                                                 <FormControl>
                                                     <div className="relative">
                                                         <Receipt className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-                                                        <Input {...field} className="pl-9 border-gray-300" placeholder="Tax ID" />
+                                                        <Input {...field} className="pl-9 h-9 sm:h-10 border-gray-300 text-sm" placeholder="Tax ID" />
                                                     </div>
                                                 </FormControl>
-                                                <FormMessage />
+                                                <FormMessage className="text-xs" />
                                             </FormItem>
                                         )}
                                     />
@@ -165,41 +165,41 @@ export function CustomerModal({ isOpen, onClose, onSuccess, supplierToEdit }: Cu
                                         name="regularPrice"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>ราคาขายประจำ (บาท)</FormLabel>
+                                                <FormLabel className="text-xs sm:text-sm">ราคาขายประจำ (บาท)</FormLabel>
                                                 <FormControl>
                                                     <div className="relative">
                                                         <CreditCard className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-                                                        <Input type="number" {...field} className="pl-9 border-gray-300 text-blue-600 font-medium" placeholder="0.00" />
+                                                        <Input type="number" {...field} className="pl-9 h-9 sm:h-10 border-gray-300 text-blue-600 font-medium text-sm" placeholder="0.00" />
                                                     </div>
                                                 </FormControl>
-                                                <FormMessage />
+                                                <FormMessage className="text-xs" />
                                             </FormItem>
                                         )}
                                     />
                                 </div>
                             </div>
 
-                            <div className="border-t border-gray-100 my-4"></div>
+                            <div className="border-t border-gray-100 my-2 sm:my-4"></div>
 
                             {/* Contact Info Section */}
-                            <div className="space-y-4">
-                                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                            <div className="space-y-3 sm:space-y-4">
+                                <h3 className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2 sm:mb-3 flex items-center gap-2">
                                     <Phone className="w-4 h-4" /> ข้อมูลติดต่อ
                                 </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                                     <FormField
                                         control={form.control}
                                         name="phone"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>เบอร์โทรศัพท์</FormLabel>
+                                                <FormLabel className="text-xs sm:text-sm">เบอร์โทรศัพท์</FormLabel>
                                                 <FormControl>
                                                     <div className="relative">
                                                         <Phone className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-                                                        <Input {...field} className="pl-9 border-gray-300" placeholder="08x-xxx-xxxx" />
+                                                        <Input {...field} className="pl-9 h-9 sm:h-10 border-gray-300 text-sm" placeholder="08x-xxx-xxxx" />
                                                     </div>
                                                 </FormControl>
-                                                <FormMessage />
+                                                <FormMessage className="text-xs" />
                                             </FormItem>
                                         )}
                                     />
@@ -207,41 +207,42 @@ export function CustomerModal({ isOpen, onClose, onSuccess, supplierToEdit }: Cu
                                         control={form.control}
                                         name="address"
                                         render={({ field }) => (
-                                            <FormItem className="col-span-2">
-                                                <FormLabel>ที่อยู่</FormLabel>
+                                            <FormItem className="col-span-1 md:col-span-2">
+                                                <FormLabel className="text-xs sm:text-sm">ที่อยู่</FormLabel>
                                                 <FormControl>
                                                     <div className="relative">
                                                         <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                                                        <Textarea {...field} className="pl-9 min-h-[80px] border-gray-300 resize-none" placeholder="ที่อยู่..." />
+                                                        <Textarea {...field} className="pl-9 min-h-[80px] border-gray-300 resize-none text-sm" placeholder="ที่อยู่..." />
                                                     </div>
                                                 </FormControl>
-                                                <FormMessage />
+                                                <FormMessage className="text-xs" />
                                             </FormItem>
                                         )}
                                     />
                                 </div>
                             </div>
-
-                            <DialogFooter className="pt-4 border-t border-gray-100 flex items-center justify-end gap-2">
-                                <Button type="button" variant="ghost" onClick={onClose} className="text-gray-500 hover:text-gray-700 hover:bg-gray-100">
-                                    <X className="mr-2 h-4 w-4" /> ยกเลิก
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    className={`${isEditing ? 'bg-amber-500 hover:bg-amber-600' : 'bg-[#1a3dbf] hover:bg-blue-800'} text-white min-w-[120px] shadow-sm transition-all`}
-                                    disabled={form.formState.isSubmitting}
-                                >
-                                    {form.formState.isSubmitting ? (
-                                        <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                                    ) : (
-                                        <Save className="mr-2 h-4 w-4" />
-                                    )}
-                                    {isEditing ? "บันทึกการแก้ไข" : "บันทึกข้อมูล"}
-                                </Button>
-                            </DialogFooter>
                         </form>
                     </Form>
                 </div>
+
+                <DialogFooter className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-100 shrink-0 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2">
+                    <Button type="button" variant="ghost" onClick={onClose} className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 w-full sm:w-auto h-10">
+                        <X className="mr-2 h-4 w-4" /> ยกเลิก
+                    </Button>
+                    <Button
+                        type="button" // Change to button and handle form submit via form Ref or ID if outside form
+                        onClick={form.handleSubmit(onSubmit)}
+                        className={`${isEditing ? 'bg-amber-500 hover:bg-amber-600' : 'bg-[#1a3dbf] hover:bg-blue-800'} text-white w-full sm:w-auto shadow-sm transition-all h-10`}
+                        disabled={form.formState.isSubmitting}
+                    >
+                        {form.formState.isSubmitting ? (
+                            <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                        ) : (
+                            <Save className="mr-2 h-4 w-4" />
+                        )}
+                        {isEditing ? "บันทึกการแก้ไข" : "บันทึกข้อมูล"}
+                    </Button>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     );
