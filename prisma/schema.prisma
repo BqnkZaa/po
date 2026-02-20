@@ -23,6 +23,13 @@ enum PoStatus {
   CANCELLED
 }
 
+enum ProductionStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  PROBLEM
+}
+
 enum ItemType {
   STANDARD
   MANUAL
@@ -87,9 +94,10 @@ model PurchaseOrder {
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 
-  user     User     @relation(fields: [userId], references: [id])
-  supplier Supplier @relation(fields: [supplierId], references: [id])
-  items    PoItem[]
+  user            User             @relation(fields: [userId], references: [id])
+  supplier        Supplier         @relation(fields: [supplierId], references: [id])
+  items           PoItem[]
+  productionOrder ProductionOrder?
 
   @@map("purchase_orders")
 }
@@ -108,4 +116,21 @@ model PoItem {
   product       Product?      @relation(fields: [productId], references: [id])
 
   @@map("po_items")
+}
+
+model ProductionOrder {
+  id              String           @id @default(cuid())
+  purchaseOrderId String           @unique @map("purchase_order_id")
+  status          ProductionStatus @default(PENDING)
+  problemNote     String?          @map("problem_note")
+  extraRequestQty Decimal?         @map("extra_request_qty") @db.Decimal(19, 8)
+  stockDeducted   Boolean          @default(false) @map("stock_deducted")
+  startedAt       DateTime?        @map("started_at")
+  completedAt     DateTime?        @map("completed_at")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+
+  @@map("production_orders")
 }

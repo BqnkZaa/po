@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
         }
 
         // ── Calculate totals ────────────────────────────────────────────────────
-        const itemsWithTotals = items.map((item) => ({
+        let itemsWithTotals = items.map((item) => ({
             ...item,
             totalPrice: Number((item.quantity * item.unitPrice).toFixed(8)),
         }));
@@ -136,18 +136,24 @@ export async function POST(request: NextRequest) {
             if (productIds.length > 0) {
                 const products = await tx.product.findMany({
                     where: { id: { in: productIds } },
-                    select: { id: true },
+                    select: { id: true, name: true, unit: true },
                 });
-                // Check if all provided product IDs were found
-                // Note: items might contain duplicates of the same productId, so distinct check needed if we were strict
-                // But a simple count check might fail if validation duplicates IDs? 
-                // Better: check if every ID in productIds exists in products.
                 const foundIds = new Set(products.map(p => p.id));
                 const missingIds = productIds.filter(id => !foundIds.has(id));
 
                 if (missingIds.length > 0) {
                     throw new Error(`Products not found: ${missingIds.join(", ")}`);
                 }
+
+                // Snapshot ชื่อสินค้าลงใน itemName เพื่อใช้งานหากสินค้าถูกลบในอนาคต
+                const productMap = new Map(products.map(p => [p.id, p]));
+                itemsWithTotals = itemsWithTotals.map((item) => {
+                    if (item.productId && !item.itemName) {
+                        const prod = productMap.get(item.productId);
+                        if (prod) return { ...item, itemName: prod.name };
+                    }
+                    return item;
+                });
             }
 
             return tx.purchaseOrder.create({

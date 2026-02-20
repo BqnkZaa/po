@@ -175,11 +175,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 4,
         alignItems: 'center',
     },
+    colNo1: { width: '8%', textAlign: 'center', color: 'black' },
     colNo: { width: '8%', textAlign: 'center' },
-    colDesc1: { width: '42%', color: 'cyan' },
+    colDesc1: { width: '42%', color: 'black' },
     colDesc: { width: '42%' },
+    colQty1: { width: '10%', textAlign: 'center', color: 'black' },
     colQty: { width: '10%', textAlign: 'center' },
+    colPrice1: { width: '20%', textAlign: 'right', color: 'black' },
     colPrice: { width: '20%', textAlign: 'right' },
+    colTotal1: { width: '20%', textAlign: 'right', color: 'black' },
     colTotal: { width: '20%', textAlign: 'right' },
 
     // Summary Section
@@ -260,13 +264,13 @@ const styles = StyleSheet.create({
     // New Summary Table Styles
     summaryTable: {
         marginTop: 10,
-        borderWidth: 0.5,
-        borderColor: '#ccc',
+        // borderWidth: 0.5,
+        // borderColor: '#ccc',
     },
     summaryRow: {
         flexDirection: 'row',
-        borderBottomWidth: 0.5,
-        borderBottomColor: '#ccc',
+        // borderBottomWidth: 0.5,
+        // borderBottomColor: '#ccc',
         minHeight: 20,
         alignItems: 'center',
     },
@@ -284,8 +288,8 @@ const styles = StyleSheet.create({
     // Net Total Row specific
     netTotalRowNew: {
         flexDirection: 'row',
-        borderBottomWidth: 0.5,
-        borderBottomColor: '#ccc',
+        // borderBottomWidth: 0.5,
+        // borderBottomColor: '#ccc',
         minHeight: 30,
         alignItems: 'center',
         backgroundColor: '#fff',
@@ -293,15 +297,15 @@ const styles = StyleSheet.create({
     netTotalLabelCol: {
         width: '20%',
         padding: 5,
-        borderRightWidth: 0.5,
-        borderRightColor: '#ccc',
+        // borderRightWidth: 0.5,
+        // borderRightColor: '#ccc',
     },
     netTotalTextCol: {
         width: '50%',
         padding: 5,
         textAlign: 'center',
-        borderRightWidth: 0.5,
-        borderRightColor: '#ccc',
+        // borderRightWidth: 0.5,
+        // borderRightColor: '#ccc'
     },
     netTotalValueCol: {
         width: '30%',
@@ -370,7 +374,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                         {/* Left Block: Supplier */}
                         <View style={styles.supplierBox}>
                             <Text style={styles.infoLabel}>ผู้จำหน่าย </Text>
-                            <Text style={styles.infoText}>{data.supplier.companyName} </Text>
+                            <Text style={styles.infoText}>{data.supplier.companyName}  </Text>
                             <Text style={styles.infoTextRegular}>{data.supplier.address}</Text>
                             <Text style={{ ...styles.infoTextRegular, marginTop: 2 }}>โทร: {data.supplier.phone}</Text>
                             <Text style={styles.infoTextRegular}>เลขผู้เสียภาษี: {data.supplier.taxId}</Text>
@@ -400,11 +404,11 @@ const POTemplate = ({ data }: { data: POData }) => {
                     {/* Table */}
                     <View style={styles.table}>
                         <View style={styles.tableHeader}>
-                            <Text style={styles.colNo}>ลำดับที่ </Text>
+                            <Text style={styles.colNo1}>ลำดับที่ </Text>
                             <Text style={styles.colDesc1}>รายการสินค้า</Text>
-                            <Text style={styles.colQty}>จำนวนห่อ </Text>
-                            <Text style={styles.colPrice}>ราคา/หน่วย</Text>
-                            <Text style={styles.colTotal}>รวม</Text>
+                            <Text style={styles.colQty1}>จำนวนห่อ </Text>
+                            <Text style={styles.colPrice1}>ราคา/หน่วย</Text>
+                            <Text style={styles.colTotal1}>รวม</Text>
                         </View>
                         {data.items.map((item, index) => (
                             <View key={index} style={styles.tableRow}>

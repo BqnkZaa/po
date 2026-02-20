@@ -14,10 +14,11 @@ interface POItem {
     id: string;
     quantity: number;
     unitPrice: number;
+    itemName?: string | null;
     product: {
         name: string;
         unit: string;
-    };
+    } | null;
 }
 
 interface PurchaseOrder {
@@ -100,10 +101,10 @@ export default function PurchaseOrderDetailPage() {
         deliveryDate: po.deliveryDate,
         supplier: po.supplier,
         items: po.items.map(item => ({
-            productName: item.product.name,
+            productName: item.product?.name ?? item.itemName ?? '(ไม่ระบุชื่อสินค้า)',
             quantity: item.quantity,
             unitPrice: Number(item.unitPrice),
-            unit: item.product.unit,
+            unit: item.product?.unit ?? '-',
         })),
     };
 

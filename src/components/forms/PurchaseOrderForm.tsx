@@ -95,8 +95,8 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
             supplierId: "",
             issueDate: new Date(),
             deliveryDate: new Date(),
-            standardItems: [{ productId: "", quantity: 0, unitPrice: 0, unit: "", productName: "" }],
-            manualItems: [{ productId: "", quantity: 0, unitPrice: 0, unit: "", productName: "" }],
+            standardItems: [{ productId: "", quantity: undefined as any, unitPrice: 0, unit: "", productName: "" }],
+            manualItems: [{ productId: "", quantity: undefined as any, unitPrice: 0, unit: "", productName: "" }],
             otherItems: [],
             shippingCost: 0,
         },
@@ -184,7 +184,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                 return {
                     productId: prod?.id || "",
                     productName: name, // Force name even if product not found?
-                    quantity: existing ? existing.quantity : 0,
+                    quantity: existing ? existing.quantity : (undefined as any),
                     unitPrice: unitPrice,
                     unit: prod?.unit || existing?.unit || "",
                     // itemType, etc handled by submit
@@ -574,7 +574,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                             <div className="col-span-1 md:col-span-2 text-right">
                                                 <div className="md:hidden text-xs font-bold text-gray-400 uppercase mb-1">ราคา/หน่วย</div>
                                                 <div className="h-10 flex items-center justify-end pr-4 font-mono text-sm text-gray-600 bg-gray-50 rounded-md border border-transparent">
-                                                    {Number(form.watch(`standardItems.${index}.unitPrice`) || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    {Number(form.watch(`standardItems.${index}.unitPrice`) || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 8 })}
                                                 </div>
                                                 <input type="hidden" {...form.register(`standardItems.${index}.unitPrice`)} />
                                             </div>
@@ -583,7 +583,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                         <div className="col-span-1 md:col-span-2 text-right pt-2 md:pt-0 border-t md:border-t-0 border-dashed border-gray-100 mt-2 md:mt-0 flex justify-between md:block items-center">
                                             <div className="md:hidden text-xs font-bold text-gray-500 uppercase">รวม</div>
                                             <div className="pr-4 text-blue-600 font-bold font-mono text-sm sm:text-base">
-                                                {(Number(form.watch(`standardItems.${index}.quantity`) || 0) * Number(form.watch(`standardItems.${index}.unitPrice`) || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                {(Number(form.watch(`standardItems.${index}.quantity`) || 0) * Number(form.watch(`standardItems.${index}.unitPrice`) || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 8 })}
                                             </div>
                                         </div>
                                         <div className="col-span-1 hidden md:flex justify-end">
@@ -645,7 +645,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                         <div className="col-span-1 md:col-span-2 text-right pt-2 md:pt-0 border-t md:border-t-0 border-dashed border-orange-200 mt-2 md:mt-0 flex justify-between md:block items-center">
                                             <div className="md:hidden text-xs font-bold text-orange-400 uppercase">รวม</div>
                                             <div className="pr-4 text-orange-600 font-bold font-mono text-sm sm:text-base">
-                                                {(Number(form.watch(`manualItems.${index}.quantity`) || 0) * Number(form.watch(`manualItems.${index}.unitPrice`) || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                {(Number(form.watch(`manualItems.${index}.quantity`) || 0) * Number(form.watch(`manualItems.${index}.unitPrice`) || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 8 })}
                                             </div>
                                         </div>
                                         <div className="hidden md:flex col-span-1 justify-end">
@@ -672,7 +672,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                     <p className="text-xs text-gray-400">Other Items (นอกระบบ)</p>
                                 </div>
                             </div>
-                            <Button type="button" size="sm" variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50" onClick={() => appendOther({ productId: "", quantity: 0, unitPrice: 0 })}>
+                            <Button type="button" size="sm" variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50" onClick={() => appendOther({ productId: "", quantity: undefined as any, unitPrice: 0 })}>
                                 + เพิ่มรายการ
                             </Button>
                         </div>
@@ -719,7 +719,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                             <div className="col-span-1 md:col-span-2 text-right pt-2 md:pt-0 border-t md:border-t-0 border-dashed border-purple-200 mt-2 md:mt-0 flex justify-between md:block items-center">
                                                 <div className="md:hidden text-xs font-bold text-purple-400 uppercase">รวม</div>
                                                 <div className="pr-4 text-purple-600 font-bold font-mono text-sm sm:text-base">
-                                                    {(Number(form.watch(`otherItems.${index}.quantity`) || 0) * Number(form.watch(`otherItems.${index}.unitPrice`) || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    {(Number(form.watch(`otherItems.${index}.quantity`) || 0) * Number(form.watch(`otherItems.${index}.unitPrice`) || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 8 })}
                                                 </div>
                                             </div>
                                             <div className="col-span-1 md:col-span-1 flex justify-end">
@@ -766,11 +766,11 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                             <div className="bg-white/10 rounded-lg p-3 sm:p-4 backdrop-blur-sm border border-white/10 flex flex-col justify-between h-20 sm:h-24">
                                 <div className="text-xs text-blue-100 uppercase tracking-wider font-semibold">ยอดรวมสินค้า</div>
-                                <div className="font-bold text-xl sm:text-2xl font-mono tracking-tight">{subtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                <div className="font-bold text-xl sm:text-2xl font-mono tracking-tight">{subtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 8 })}</div>
                             </div>
                             <div className="bg-white/10 rounded-lg p-3 sm:p-4 backdrop-blur-sm border border-white/10 flex flex-col justify-between h-20 sm:h-24">
                                 <div className="text-xs text-blue-100 uppercase tracking-wider font-semibold">VAT (7%)</div>
-                                <div className="font-bold text-xl sm:text-2xl font-mono tracking-tight">{vatAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                <div className="font-bold text-xl sm:text-2xl font-mono tracking-tight">{vatAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 8 })}</div>
                             </div>
                             <div className="bg-white/10 rounded-lg p-3 sm:p-4 backdrop-blur-sm border border-white/10 flex flex-col justify-between h-20 sm:h-24">
                                 <div className="text-xs text-blue-100 uppercase tracking-wider font-semibold">จำนวนรวม (ชิ้น)</div>
@@ -779,7 +779,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                             <div className="bg-gradient-to-r from-yellow-400 to-amber-500 rounded-lg p-3 sm:p-4 text-blue-900 flex flex-col justify-between h-20 sm:h-24 shadow-lg relative overflow-hidden group">
                                 <div className="absolute -right-4 -top-4 bg-white/30 rounded-full w-20 h-20 blur-xl group-hover:scale-150 transition-transform duration-500"></div>
                                 <div className="text-xs font-extrabold uppercase tracking-wider z-10">ยอดสุทธิ (Net Total)</div>
-                                <div className="font-bold text-2xl sm:text-3xl font-mono tracking-tight z-10">{grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                <div className="font-bold text-2xl sm:text-3xl font-mono tracking-tight z-10">{grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 8 })}</div>
                             </div>
                         </div>
                     </div>
