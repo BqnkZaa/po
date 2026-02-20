@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
     },
     taxID: {
         fontSize: 9,
-        color: 'red',
-        fontWeight: 'bold',
+        color: 'black',
+        fontWeight: 'normal',
     },
     headerRight: {
         position: 'absolute',
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#000',
     },
     yellowSubHeaderReceipt: {
-        backgroundColor: '#0055aa', // Blue for receipt pages
+        backgroundColor: '#5677fc', // Blue for receipt pages
         paddingVertical: 8,
         alignItems: 'center',
         borderBottomWidth: 1,
@@ -257,6 +257,57 @@ const styles = StyleSheet.create({
         marginTop: 5,
         fontSize: 9,
     },
+    // New Summary Table Styles
+    summaryTable: {
+        marginTop: 10,
+        borderWidth: 0.5,
+        borderColor: '#ccc',
+    },
+    summaryRow: {
+        flexDirection: 'row',
+        borderBottomWidth: 0.5,
+        borderBottomColor: '#ccc',
+        minHeight: 20,
+        alignItems: 'center',
+    },
+    summaryLabelCol: {
+        width: '70%',
+        padding: 5,
+        borderRightWidth: 0.5,
+        borderRightColor: '#ccc',
+    },
+    summaryValueCol: {
+        width: '30%',
+        padding: 5,
+        textAlign: 'right',
+    },
+    // Net Total Row specific
+    netTotalRowNew: {
+        flexDirection: 'row',
+        borderBottomWidth: 0.5,
+        borderBottomColor: '#ccc',
+        minHeight: 30,
+        alignItems: 'center',
+        backgroundColor: '#fff',
+    },
+    netTotalLabelCol: {
+        width: '20%',
+        padding: 5,
+        borderRightWidth: 0.5,
+        borderRightColor: '#ccc',
+    },
+    netTotalTextCol: {
+        width: '50%',
+        padding: 5,
+        textAlign: 'center',
+        borderRightWidth: 0.5,
+        borderRightColor: '#ccc',
+    },
+    netTotalValueCol: {
+        width: '30%',
+        padding: 5,
+        textAlign: 'right',
+    },
 });
 
 interface POData {
@@ -285,7 +336,7 @@ const POTemplate = ({ data }: { data: POData }) => {
     const vatAmount = subtotal * vatRate;
     const shippingCost = 0;
     const grandTotal = subtotal + vatAmount + shippingCost;
-    const totalQty = data.items.reduce((sum, item) => sum + item.quantity, 0);
+    const totalQty = data.items.reduce((sum, item) => sum + Number(item.quantity), 0);
     const thaiText = thaiBahtText(grandTotal);
 
     const pages = [
@@ -308,7 +359,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                         <Text style={styles.companyAddress}>เบอร์โทรศัพท์ 081-599-6698, 086-900-7225 สำนักงาน 053-245-750</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
                             <Text style={styles.companyAddress}>เลขที่ประจำตัวผู้เสียภาษีอากร : </Text>
-                            <Text style={styles.taxID}>0505566007959</Text>
+                            <Text style={styles.taxID}> 0505566007959</Text>
                         </View>
                     </View>
 
@@ -364,37 +415,48 @@ const POTemplate = ({ data }: { data: POData }) => {
                                 <Text style={styles.colTotal}>{(item.quantity * item.unitPrice).toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}</Text>
                             </View>
                         ))}
+                        {/* Total Quantity Row */}
+                        <View style={styles.tableRow}>
+                            <Text style={{ width: '50%', paddingLeft: 4 }}>จำนวนสินค้าที่สั่งซื้อ ({data.items[0]?.unit || 'ห่อ'})</Text>
+                            <Text style={styles.colQty}>{totalQty}</Text>
+                            <Text style={{ width: '40%' }}></Text>
+                        </View>
                     </View>
 
                     {/* Summary */}
-                    <View style={styles.summaryContainer}>
-                        <View style={styles.summaryContent}>
-                            <View style={styles.totalsBox}>
-                                <View style={{ backgroundColor: '#f9f9f9', padding: 10, borderRadius: 2, marginBottom: 5 }}>
-                                    <View style={styles.totalRow}>
-                                        <Text style={styles.totalLabel}>ราคาสินค้าก่อนหักภาษี</Text>
-                                        <Text style={styles.totalValue}>{subtotal.toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}</Text>
-                                    </View>
-                                    <View style={styles.totalRow}>
-                                        <Text style={styles.totalLabel}>ภาษีมูลค่าเพิ่ม 7%</Text>
-                                        <Text style={styles.totalValue}>{vatAmount.toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}</Text>
-                                    </View>
-                                    <View style={styles.totalRow}>
-                                        <Text style={styles.totalLabel}>ค่าขนส่ง</Text>
-                                        <Text style={styles.totalValue}>{shippingCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}</Text>
-                                    </View>
-                                    <View style={styles.totalRow}>
-                                        <Text style={styles.totalLabel}>จำนวนสินค้าที่สั่งซื้อ ({data.items[0]?.unit || 'หน่วย'})</Text>
-                                        <Text style={styles.totalValue}>{totalQty}</Text>
-                                    </View>
-                                </View>
-
-                                <View style={styles.netTotalRow}>
-                                    <Text style={styles.netTotalLabel}>รายรับสุทธิ</Text>
-                                    <Text style={{ ...styles.netTotalText, color: '#0099cc' }}>{thaiText}บาทถ้วน</Text>
-                                </View>
-                            </View>
+                    {/* Summary */}
+                    <View style={styles.summaryTable}>
+                        {/* Row 1: Shipping */}
+                        <View style={styles.summaryRow}>
+                            <Text style={styles.summaryLabelCol}>ค่าขนส่ง (ไม่หัก VAT 7%)</Text>
+                            <Text style={styles.summaryValueCol}>{shippingCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}</Text>
                         </View>
+                        {/* Row 2: Subtotal */}
+                        <View style={styles.summaryRow}>
+                            <Text style={styles.summaryLabelCol}>ราคาสินค้าก่อนหักภาษี</Text>
+                            <Text style={styles.summaryValueCol}>{subtotal.toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}</Text>
+                        </View>
+                        {/* Row 3: VAT */}
+                        <View style={styles.summaryRow}>
+                            <Text style={styles.summaryLabelCol}>ภาษีมูลค่าเพิ่ม 7%</Text>
+                            <Text style={styles.summaryValueCol}>{vatAmount.toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}</Text>
+                        </View>
+                        {/* Row 4: Net Total */}
+                        <View style={styles.netTotalRowNew}>
+                            <Text style={{ ...styles.netTotalLabelCol, color: '#0099cc', fontWeight: 'bold' }}>รายรับสุทธิ</Text>
+                            <Text style={{ ...styles.netTotalTextCol, color: '#0099cc', fontWeight: 'bold' }}>{thaiText}</Text>
+                            <Text style={{ ...styles.netTotalValueCol, color: '#0099cc', fontWeight: 'bold', fontSize: 12 }}>{grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท</Text>
+                        </View>
+                    </View>
+
+
+
+                    {/* Transfer Details Box */}
+                    <View style={{ marginTop: 15, borderWidth: 1, borderColor: '#000', padding: 8, width: '55%', alignSelf: 'flex-start' }}>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold', marginBottom: 2 }}>กรุณาโอนเงินตามหมายเลขบัญชี</Text>
+                        <Text style={{ fontSize: 10 }}>ธนาคารกสิกรไทย สาขาถนนเจริญนนทบุรี เชียงใหม่</Text>
+                        <Text style={{ fontSize: 10 }}>ออมทรัพย์ 156-1-07114-0</Text>
+                        <Text style={{ fontSize: 10 }}>บริษัท ตรีเอกอุตสาหกรรมอาหาร จำกัด</Text>
                     </View>
 
                     {/* Footer Signatures */}
@@ -402,6 +464,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                         <View style={styles.signatureBlock}>
                             <View style={styles.signLine} />
                             <Text style={styles.signatureText}>ผู้รับสินค้า</Text>
+                            <Text style={styles.signatureText}> </Text>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
                                 <Text style={{ fontSize: 9 }}>วันที่ ___/___/______</Text>
                             </View>
@@ -409,21 +472,23 @@ const POTemplate = ({ data }: { data: POData }) => {
                         <View style={styles.signatureBlock}>
                             <View style={styles.signLine} />
                             <Text style={styles.signatureText}>ผู้ส่งสินค้า</Text>
+                            <Text style={styles.signatureText}> </Text>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
                                 <Text style={{ fontSize: 9 }}>วันที่ ___/___/______</Text>
                             </View>
                         </View>
                         <View style={styles.signatureBlock}>
                             <View style={styles.signLine} />
-                            <Text style={styles.signatureText}>ผู้มีอำนาจลงนาม </Text>
+                            <Text style={styles.signatureText}>นายทรงวุฒิ เดชะ </Text>
+                            <Text style={styles.signatureText}>(ผู้มีอำนาจลงนาม) </Text>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
                                 <Text style={{ fontSize: 9 }}>วันที่ ___/___/______</Text>
                             </View>
                         </View>
                     </View>
-                </Page>
+                </Page >
             ))}
-        </Document>
+        </Document >
     );
 };
 
