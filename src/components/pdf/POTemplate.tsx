@@ -373,7 +373,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                     <View style={styles.infoContainer}>
                         {/* Left Block: Supplier */}
                         <View style={styles.supplierBox}>
-                            <Text style={styles.infoLabel}>ลูกค้า </Text>
+                            <Text style={styles.infoLabel}>ลูกค้า/Customer </Text>
                             <Text style={styles.infoText}>{data.supplier.companyName}  </Text>
                             <Text style={styles.infoTextRegular}>{data.supplier.address}</Text>
                             <Text style={{ ...styles.infoTextRegular, marginTop: 2 }}>โทร: {data.supplier.phone}</Text>
@@ -437,7 +437,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                         </View>
                         {/* Row 2: Subtotal */}
                         <View style={styles.summaryRow}>
-                            <Text style={styles.summaryLabelCol}>ราคาสินค้าก่อนหักภาษี</Text>
+                            <Text style={styles.summaryLabelCol}>ราคาสินค้าก่อนภาษีมูลค่าเพิ่ม </Text>
                             <Text style={styles.summaryValueCol}>{subtotal.toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 })}</Text>
                         </View>
                         {/* Row 3: VAT */}
@@ -458,9 +458,9 @@ const POTemplate = ({ data }: { data: POData }) => {
                     {/* Transfer Details Box */}
                     <View style={{ marginTop: 15, borderWidth: 1, borderColor: '#000', padding: 8, width: '55%', alignSelf: 'flex-start' }}>
                         <Text style={{ fontSize: 10, fontWeight: 'bold', marginBottom: 2 }}>กรุณาโอนเงินตามหมายเลขบัญชี</Text>
-                        <Text style={{ fontSize: 10 }}>ธนาคารกสิกรไทย สาขาถนนเจริญนนทบุรี เชียงใหม่</Text>
+                        <Text style={{ fontSize: 10 }}>ธนาคารกสิกรไทย สาขาถนนเจริญเมือง เชียงใหม่ </Text>
                         <Text style={{ fontSize: 10 }}>ออมทรัพย์ 156-1-07114-0</Text>
-                        <Text style={{ fontSize: 10 }}>บริษัท ตรีเอกอุตสาหกรรมอาหาร จำกัด</Text>
+                        <Text style={{ fontSize: 10 }}>บริษัท ตรีเอกอุตสาหกรรมอาหาร จำกัด (สำนักงาน)  </Text>
                     </View>
 
                     {/* Footer Signatures */}
@@ -470,7 +470,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                             <Text style={styles.signatureText}>ผู้รับสินค้า</Text>
                             <Text style={styles.signatureText}> </Text>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                <Text style={{ fontSize: 9 }}>วันที่ ___/___/______</Text>
+                                <Text style={{ fontSize: 9 }}>วันที่ ______________</Text>
                             </View>
                         </View>
                         <View style={styles.signatureBlock}>
@@ -478,7 +478,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                             <Text style={styles.signatureText}>ผู้ส่งสินค้า</Text>
                             <Text style={styles.signatureText}> </Text>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                <Text style={{ fontSize: 9 }}>วันที่ ___/___/______</Text>
+                                <Text style={{ fontSize: 9 }}>วันที่ ______________</Text>
                             </View>
                         </View>
                         <View style={styles.signatureBlock}>
@@ -486,7 +486,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                             <Text style={styles.signatureText}>นายทรงวุฒิ เดชะ </Text>
                             <Text style={styles.signatureText}>(ผู้มีอำนาจลงนาม) </Text>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                <Text style={{ fontSize: 9 }}>วันที่ ___/___/______</Text>
+                                <Text style={{ fontSize: 9 }}>วันที่ ______________</Text>
                             </View>
                         </View>
                     </View>

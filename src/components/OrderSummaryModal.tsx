@@ -102,7 +102,7 @@ export function OrderSummaryModal({
                     {/* Footer / Totals */}
                     <div className="border-t border-gray-100 pt-4 space-y-2 text-right">
                         <div className="flex justify-between items-center text-gray-600 text-sm sm:text-base">
-                            <span>ราคาสินค้าก่อนหักภาษี:</span>
+                            <span>ราคาสินค้าก่อนภาษีมูลค่าเพิ่ม:</span>
                             <span>{subtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 8 })} บาท</span>
                         </div>
                         <div className="flex justify-between items-center text-gray-600 text-sm sm:text-base">
