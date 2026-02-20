@@ -95,8 +95,8 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
             supplierId: "",
             issueDate: new Date(),
             deliveryDate: new Date(),
-            standardItems: [{ productId: "", quantity: undefined as any, unitPrice: 0, unit: "", productName: "" }],
-            manualItems: [{ productId: "", quantity: undefined as any, unitPrice: 0, unit: "", productName: "" }],
+            standardItems: [{ productId: "", quantity: "" as any, unitPrice: 0, unit: "", productName: "" }],
+            manualItems: [{ productId: "", quantity: "" as any, unitPrice: 0, unit: "", productName: "" }],
             otherItems: [],
             shippingCost: 0,
         },
@@ -184,7 +184,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                 return {
                     productId: prod?.id || "",
                     productName: name, // Force name even if product not found?
-                    quantity: existing ? existing.quantity : (undefined as any),
+                    quantity: existing ? existing.quantity : ("" as any),
                     unitPrice: unitPrice,
                     unit: prod?.unit || existing?.unit || "",
                     // itemType, etc handled by submit
@@ -562,6 +562,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                                         type="number"
                                                         step="1"
                                                         {...form.register(`standardItems.${index}.quantity`)}
+                                                        defaultValue=""
                                                         className="text-center h-10 border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all font-medium"
                                                         placeholder="0"
                                                     />
@@ -672,7 +673,7 @@ export function PurchaseOrderForm({ initialData, onSuccess, onCancel }: Purchase
                                     <p className="text-xs text-gray-400">Other Items (นอกระบบ)</p>
                                 </div>
                             </div>
-                            <Button type="button" size="sm" variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50" onClick={() => appendOther({ productId: "", quantity: undefined as any, unitPrice: 0 })}>
+                            <Button type="button" size="sm" variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50" onClick={() => appendOther({ productId: "", quantity: "" as any, unitPrice: 0 })}>
                                 + เพิ่มรายการ
                             </Button>
                         </div>
