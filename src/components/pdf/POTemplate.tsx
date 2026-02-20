@@ -373,7 +373,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                     <View style={styles.infoContainer}>
                         {/* Left Block: Supplier */}
                         <View style={styles.supplierBox}>
-                            <Text style={styles.infoLabel}>ผู้จำหน่าย </Text>
+                            <Text style={styles.infoLabel}>ลูกค้า </Text>
                             <Text style={styles.infoText}>{data.supplier.companyName}  </Text>
                             <Text style={styles.infoTextRegular}>{data.supplier.address}</Text>
                             <Text style={{ ...styles.infoTextRegular, marginTop: 2 }}>โทร: {data.supplier.phone}</Text>
