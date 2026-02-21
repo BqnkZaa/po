@@ -460,7 +460,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                         <Text style={{ fontSize: 10, fontWeight: 'bold', marginBottom: 2 }}>กรุณาโอนเงินตามหมายเลขบัญชี</Text>
                         <Text style={{ fontSize: 10 }}>ธนาคารกสิกรไทย สาขาถนนเจริญเมือง เชียงใหม่ </Text>
                         <Text style={{ fontSize: 10 }}>ออมทรัพย์ 156-1-07114-0</Text>
-                        <Text style={{ fontSize: 10 }}>บริษัท ตรีเอกอุตสาหกรรมอาหาร จำกัด (สำนักงาน)  </Text>
+                        <Text style={{ fontSize: 10 }}>บริษัท ตรีเอกอุตสาหกรรมอาหาร จำกัด   </Text>
                     </View>
 
                     {/* Footer Signatures */}
@@ -470,7 +470,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                             <Text style={styles.signatureText}>ผู้รับสินค้า</Text>
                             <Text style={styles.signatureText}> </Text>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                <Text style={{ fontSize: 9 }}>วันที่ ______________</Text>
+                                <Text style={{ fontSize: 9 }}>วันที่ ________________________________</Text>
                             </View>
                         </View>
                         <View style={styles.signatureBlock}>
@@ -478,7 +478,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                             <Text style={styles.signatureText}>ผู้ส่งสินค้า</Text>
                             <Text style={styles.signatureText}> </Text>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                <Text style={{ fontSize: 9 }}>วันที่ ______________</Text>
+                                <Text style={{ fontSize: 9 }}>วันที่ ________________________________</Text>
                             </View>
                         </View>
                         <View style={styles.signatureBlock}>
@@ -486,7 +486,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                             <Text style={styles.signatureText}>นายทรงวุฒิ เดชะ </Text>
                             <Text style={styles.signatureText}>(ผู้มีอำนาจลงนาม) </Text>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                <Text style={{ fontSize: 9 }}>วันที่ ______________</Text>
+                                <Text style={{ fontSize: 9 }}>วันที่ ________________________________</Text>
                             </View>
                         </View>
                     </View>
