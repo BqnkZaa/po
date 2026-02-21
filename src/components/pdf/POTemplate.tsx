@@ -469,6 +469,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                             <View style={styles.signLine} />
                             <Text style={styles.signatureText}>ผู้รับสินค้า</Text>
                             <Text style={styles.signatureText}> </Text>
+                            <Text style={styles.signatureText}> </Text>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
                                 <Text style={{ fontSize: 9 }}>วันที่ ________________________________</Text>
                             </View>
@@ -476,6 +477,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                         <View style={styles.signatureBlock}>
                             <View style={styles.signLine} />
                             <Text style={styles.signatureText}>ผู้ส่งสินค้า</Text>
+                            <Text style={styles.signatureText}> </Text>
                             <Text style={styles.signatureText}> </Text>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
                                 <Text style={{ fontSize: 9 }}>วันที่ ________________________________</Text>
@@ -485,6 +487,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                             <View style={styles.signLine} />
                             <Text style={styles.signatureText}>นายทรงวุฒิ เดชะ </Text>
                             <Text style={styles.signatureText}>(ผู้มีอำนาจลงนาม) </Text>
+                            <Text style={styles.signatureText}> </Text>                            
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
                                 <Text style={{ fontSize: 9 }}>วันที่ ________________________________</Text>
                             </View>
