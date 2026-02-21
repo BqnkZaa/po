@@ -472,7 +472,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                             <Text style={styles.signatureText}> </Text>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
                                 <Text style={styles.signatureText}> </Text>
-                                <Text style={{ fontSize: 9 }}>วันที่ __________________________</Text>
+                                <Text style={{ fontSize: 9 }}>วันที่ ________________________________</Text>
                             </View>
                         </View>
                         <View style={styles.signatureBlock}>
@@ -482,7 +482,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                             <Text style={styles.signatureText}> </Text>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
                                 <Text style={styles.signatureText}> </Text>
-                                <Text style={{ fontSize: 9 }}>วันที่ __________________________</Text>
+                                <Text style={{ fontSize: 9 }}>วันที่ ________________________________</Text>
                             </View>
                         </View>
                         <View style={styles.signatureBlock}>
@@ -492,7 +492,7 @@ const POTemplate = ({ data }: { data: POData }) => {
                             <Text style={styles.signatureText}> </Text>
                             <View style={{ flexDirection: 'row', marginTop: 5 }}>
                                 <Text style={styles.signatureText}> </Text>
-                                <Text style={{ fontSize: 9 }}>วันที่ __________________________</Text>
+                                <Text style={{ fontSize: 9 }}>วันที่ ________________________________</Text>
                             </View>
                         </View>
                     </View>
